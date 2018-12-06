@@ -25,6 +25,15 @@ x
 x = NULL
 x
 
+
+#### Vectorized Operations #####
+x <- 1:4; y <- 6:9
+x+ y
+x[x> 2]
+x* y
+x- y
+
+
 #### Matrix #####
 m = matrix(1:6, nrow = 2, ncol = 3, byrow = TRUE)
 m
@@ -55,6 +64,10 @@ y=10:12
 y
 cbind(x,y)
 rbind(x,y)
+
+x = matrix(1:6, 2, 3)
+x[1, 2]
+x[1, 2, drop = FALSE]
 
 #### Dataframes #####
 x = data.frame(foo = 1:9, bar = c(T,T,T,T,T,F,F,F,F), row.names =c("a","s","d","f","g","h","j","k","l"))
@@ -126,6 +139,30 @@ for (val in x) {
 count
 
 
+x <- c("a", "b", "c", "d")
+for(i in 1:4) { 
+  print(x[i])
+}
+
+for(i in seq(x)) { 
+  print(x[i])
+}
+
+for(i in seq_along(10)) { 
+  print(i)
+}
+
+
+for(letter in x) { 
+  print(letter)
+}
+
+for(i in 1:20) { 
+  print(i)
+}
+
+
+
 i=1
 while(i<6){
   print(i)
@@ -160,6 +197,7 @@ check(-2)
 ######## apply ########
 m=matrix(1:16,4,4)
 m
+min(m)
 apply(m, 1, min)
 apply(m, 1, max)
 apply(m, 1, sum)
@@ -174,7 +212,22 @@ class(c)
 typeof(c)
 
 
+######## list ########
+x = list(foo = 1:4, bar = 0.6, baz = "hello")
+x
+x[c(1,3)]
 
 ######## Rough ########
 x = 8
 x%%2.0
+
+x=1.001
+class(x)
+
+y=vector()
+z=3:6
+z
+x = vector("numeric", length = 10)
+x = matrix(1:6, 2, 3)
+x
+x[1,]
