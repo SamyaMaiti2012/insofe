@@ -231,3 +231,12 @@ x = vector("numeric", length = 10)
 x = matrix(1:6, 2, 3)
 x
 x[1,]
+
+
+
+seq(3,1)
+seq(c(10:5))
+c(10:5)
+sequence(c(10,5))
+
+
