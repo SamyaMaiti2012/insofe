@@ -78,6 +78,10 @@ colnames(x)
 rownames(x)
 dim(x)
 class(x)
+View(x)
+head(x)
+
+
 
 #### Subsetting #####
 x = c("a","s","d","f","g","h","j","k","l")
@@ -240,3 +244,18 @@ c(10:5)
 sequence(c(10,5))
 
 
+install.packages('dplyr')
+library(dplyr)
+dplyr::select
+getwd()
+
+vec2 = c(1,2,3,4,5,5,6,8,3)
+vec2
+sort(vec2)
+table(vec2)
+rev(vec2)
+unique(vec2)
+vec2[1]
+vec2[vec2==3]
+vec2[vec2<3]
+vec2[vec2 %in% c(3,7)]
