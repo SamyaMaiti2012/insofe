@@ -29,3 +29,18 @@ dbinom(0,12,.5)+dbinom(1,12,.5)+dbinom(2,12,.5)
 dpois(3,5)
 #QA 3
 dpois(0,5)
+
+
+
+###### 7 ########
+
+1-pnorm(x,2, 5.41) 
+
+
+########## Practice ##############
+
+rbinom(0,12,.5)
+
+require(graphics)
+# Compute P(45 < X < 55) for X Binomial(100,0.5)
+sum(dbinom(46:54, 100, 0.5))
