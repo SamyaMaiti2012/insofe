@@ -290,7 +290,6 @@ head(mtcars_imputed)
 ```
 
 ```{r}
-centralvalue()
 ```
 
 ```{r}
@@ -507,7 +506,7 @@ IJ_merged_df
 ```
 
 ```{r}
-View(IJ_merged_df)
+#View(IJ_merged_df)
 ```
 
 ```{r}
