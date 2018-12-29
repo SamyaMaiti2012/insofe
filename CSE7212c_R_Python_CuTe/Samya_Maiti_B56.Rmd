@@ -1,0 +1,209 @@
+---
+title: "Samya_Maiti_B56"
+author: "Samya Maiti"
+date: "12/29/2018"
+output: html_document
+---
+
+# CSE7212c_R_Python_CUTe
+
+Set Current working directory to the dataset directory
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath("/Users/samyam/Documents/Samya/Insofe/insofe/CSE7212c_R_Python_CuTe/datasets"))
+```
+
+Clean up environment
+```{r}
+rm(list = ls(all=TRUE))
+```
+
+Check current working directory
+```{r}
+wd <- getwd()
+sprintf("Current working dir: %s", wd)
+```
+
+### Question 1 :- Import the go_tracks.csv file into R
+```{r}
+#Load the go_tracks.csv into R env
+gotracks = read.csv(file = "go_tracks.csv",header=TRUE,sep=",")
+sprintf("Num rows in input dataset: %d", nrow(gotracks))
+sprintf("Num columns in input dataset: %d", ncol(gotracks))
+```
+
+### Question 2 :- Look at the structure and summary of the datasets. Observe the data and report your findings as comments in your R file.
+```{r}
+#Structure of input dataset
+str(gotracks)
+```
+```{r}
+#Observations :-
+# 1. Total number of datapoints (rows) = 163
+# 2. Total number of features (columns) = 10
+# 3. Number of categorical variables = 7
+# 4. Number of numeric variables = 3
+# 5. variable "time" is a derived attribute
+# 6. Number of levels for column speed, time and distance are very high compared to the total number of data points(rows)
+```
+
+```{r}
+#Summary of input dataset
+summary(gotracks)
+```
+
+```{r}
+#Observations :-
+# 1. Feature id has a high variability from 1 to 38092.0.
+# 2. Missing value analysis :-
+#     a. ? present in feature speed, time, rating, rating_bus, car_or_bus
+#     b. Blank (empty space) / NA's present in feature speed, rating, linha, rating_weather
+#
+```
+
+### Question 4 :- Impute the na values, "?" should be treated as na
+```{r}
+# Load the dataset again, treating ? & empty spaces as na 
+gotrackshandlena = read.csv(file = "go_tracks.csv",header=TRUE,sep=",",na.strings = c("?", ""))
+sprintf("Number of rows with NA's : %d",sum(is.na(gotrackshandlena)))
+```
+
+```{r}
+str(gotrackshandlena)
+```
+
+```{r}
+#Observations after loading data with data imputation handled:-
+# 1. Total number of datapoints (rows) = 163
+# 2. Total number of features (columns) = 10
+# 3. Number of categorical variables = 1
+# 4. Number of numeric variables = 9
+# 5. variable "time" is a derived attribute
+```
+
+```{r}
+#Summary of input dataset
+summary(gotrackshandlena)
+```
+
+```{r}
+#Observations :-
+# 1. Feature id has a high variability from 1 to 38092.0.
+# 2. Missing value analysis :-
+#     a. NA's present in feature speed, rating, time, distance,rating,rating_bus, rating_weather, car_or_bus & linha
+# 3. Count of NA's is very high for column linha, so we need to Look for a strategy to fill values / leave as is (based on usecase). Cannot be dropped.
+# 4. Cummulative count of NA's of all other columns are comparatively very less to the total number of data points in the dataset.
+```
+
+```{r}
+# As the number of NA's in linha is 83 out of 163 rows, we can remove the column, with the argument that it will have no impact on the final predictive power of the model.
+gotracksaltered = gotrackshandlena[ , -which(names(gotrackshandlena) %in% c("linha"))]
+
+# Check altered dataframe
+head(gotracksaltered)
+```
+
+```{r}
+#Remove rows with NA's as the count are comparatively very less to the total number of data points in the dataset.
+sprintf("Rows before imputation : %d",nrow(gotracksaltered))
+gotracksaltered_omit <- na.omit(gotracksaltered)
+sprintf("Rows before imputation : %d",nrow(gotracksaltered_omit))
+```
+
+
+```{r}
+# Assign rowname to id
+rownames(gotracksaltered_omit) = gotracksaltered_omit$id
+rownames(gotracksaltered_omit)
+gotracksaltered_omit$id=NULL
+```
+```{r}
+#Verify the altered dataframe
+head(gotracksaltered_omit)
+```
+
+### Question 3 :- Convert the attributes into appropriate data types.
+```{r}
+#Already in the required datatypes, after reloading for data imputation. 
+# No need to use "as" with function
+```
+
+### Question 5 :- Write a user-defined function which takes in a numeric attribute and returns the range of that attribute. (Do not use any inbuilt functions like range, max, min or apply functions etc). Apply the function you made and find the range of the following attributes in this dataset - speed,time and distance.
+```{r}
+get_range <- function(attr_name) {
+  #Assumptions
+   minVal=1000000
+   maxVal=-100000
+  for (val in as.vector(gotracksaltered_omit[,attr_name])){
+    if(val < minVal){
+      minVal=val
+    }
+    if(val > maxVal){
+      maxVal=val
+    }
+  }
+  return(list(minVal,maxVal))
+}
+
+get_range('speed')
+get_range('time')
+get_range('distance')
+```
+```{r}
+as.vector(gotracksaltered_omit['speed'])
+```
+
+### Question 6 :- Use any of the apply functions in R and find the mean of the attributes 'speed' and 'distance'.
+```{r}
+mean_speed = apply(gotracksaltered_omit['speed'],2,mean)
+mean_distance = apply(gotracksaltered_omit['distance'],2,mean)
+
+sprintf("Mean speed : %f",mean_speed)
+sprintf("Mean distance : %f",mean_distance)
+```
+
+### Question 7 :- Use a 'for loop' to loop through the values in the attribute 'distance' and find the maximum distance travelled. You should not use the inbuilt function for this.
+```{r}
+maxVal = 0
+for (dist_val in gotracksaltered_omit$distance){
+  if(dist_val > maxVal){
+    maxVal=dist_val
+  }
+}
+sprintf("Max value is : %g",maxVal)
+```
+
+### Question 8 :- 
+```{r}
+GPS_df=gotracksaltered_omit[1:10,c('speed', 'time', 'distance')]
+#GPS_df
+#class(GPS_df)
+sapply(GPS_df, class)
+sprintf("This is a numeric dataframe")
+```
+
+### Question 9 :- 
+```{r}
+#Find the min max of each column, also range can be used.
+data.frame(min=sapply(gotracksaltered_omit,min),max=sapply(gotracksaltered_omit,max))
+```
+
+### Question 10 :-
+
+```{r}
+colnames(gotracksaltered_omit)
+```
+
+```{r}
+#Standardize, Z score representation
+gotracksaltered_omit_standardized <- decostand(x =gotracksaltered_omit[,c('id_android','speed','time','distance','rating','rating_bus','rating_weather','car_or_bus')],method ="standardize",MARGIN = 2)
+gotracksaltered_omit_standardized
+```
+
+### Question 11 :-
+```{r}
+str(gotracksaltered_omit)
+```
+```{r}
+
+```
+
