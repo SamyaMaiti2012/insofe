@@ -311,7 +311,6 @@ plot(pca_scaled)
 * Project the train and test data sets onto the derived principal components
 
 ```{r}
-
 train_pca_e <- as.data.frame(predict(pca_scaled, train_data[, !(names(train_data) %in% c("Species"))]))
 
 test_pca_e <- as.data.frame(predict(pca_scaled, test_data[, !(names(train_data) %in% c("Species"))]))
