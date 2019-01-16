@@ -1,0 +1,494 @@
+---
+title: "Predicting Income using LASSO, Ridge and Elastic Net Regularization methods"
+author: "INSOFE Lab"
+date: "28 July, 2018"
+output:
+  html_document:
+    toc : yes
+    toc_depth : 5
+    toc_float : yes
+---
+
+*Formulae :* 
+ AIC for a Regression problem: $$AIC = 2k + n*Log(RSS/n)$$
+
+* RSS - Residual Sum of Squares
+
+* n - Number of training examples
+
+* k - Number of attributes/independent variables/ predictor variables/ features
+
+# First things first
+
+* Clear the environment
+* You might want to comment this line if you are working on multiple datasets/problems to avoid accidental removal of objects from the environment
+
+```{r}
+rm(list=ls())
+```
+
+# Read and Understand the data
+
+```{r}
+
+df <- read.delim("./UnivBank.csv",sep = ",",na.strings = c(""," ","?","#"))
+
+str(df)
+
+summary(df)
+
+```
+
+## Data Description 
+- Name : Description
+- ID : Customer ID
+- Age : Customer's age in completed year
+- Experience : # years of professional experience
+- Income : Annual income of the customer (1,000)
+- ZIPcode : Home address ZIP code
+- Family : Family size of the customer 
+- CCAvg : Average monthly credit card spending (1, 000) 
+- Education : Education level: 1: undergrad; 2, Graduate; 3; Advance/Professional
+- Mortgage : Value of house mortgage if any (1, 000)
+- Personal loan : Did this customer accept the personal loan offered in he last - campaign? 1, yes; 0, no
+- Securities Acct : Does the customer have a securities account with the bank?
+- CD Account : Does the customer have a certifcate of deposit (CD) account with - the bank?
+- Online : Does the customer use internet bank facilities?
+- CreditCard : Does the customer use a credit card issued by the Bank?
+- We will try to predict the Income of a person based on the other variables.
+
+```{r}
+sum(is.na(df))
+```
+
+* Observations?
+
+```{r}
+# dropping Zip
+df$ZIP.Code = NULL
+df$ID = NULL
+# Experience has negative values, change them to 0
+df$Experience[df$Experience < 0] <- 0
+cat_cols = c("Family","CreditCard","CD.Account","Online","Education","Personal.Loan","Securities.Account")
+num_cols = setdiff(colnames(df),cat_cols)
+cat_cols
+num_cols
+summary(df)
+```
+
+### Converting to appropriate data types
+
+```{r}
+df[,cat_cols] = data.frame(apply(df[,cat_cols],2,as.factor))
+
+```
+
+# EDA
+
+## Categorical columns distribution
+
+```{r}
+for (i in cat_cols){
+  if (i != "ZIP.Code")barplot(table(df[,i]),col = "brown",main = paste("Distribution of ",i))  
+}
+```
+
+## Boxplots
+
+### Online and Income
+
+```{r}
+library(ggplot2)
+ggplot(df, aes(x=Online, y=Income)) + 
+  geom_boxplot(aes(fill=Online))
+```
+
+
+# Data Pre-processing
+
+## Train-Test Split
+
+* Split the data into train and test
+
+```{r warning=FALSE}
+
+set.seed(007) # set seed for reproducible results
+library(caret)
+train_rows  <- createDataPartition(df$Income, p = .8, 
+                                  list = FALSE, 
+                                  times = 1)
+
+
+train_data <- df[train_rows, ]
+
+test_data <- df[-train_rows, ]
+
+```
+
+* Carets' createDataPartition is not very helpful for a regression problem as the stratified sampling technique does not offer any help here, regardless we will use this method for splitting our data to maintain the flow.
+
+## Correlation plot
+
+```{r}
+library(corrplot)
+corrplot(cor(train_data[num_cols],use="complete.obs"),title = "Correlation plot for train data")
+```
+
+```{r}
+
+corrplot(cor(test_data[num_cols],use="complete.obs"),title = "Correlation plot for test data")
+```
+
+## Imputation
+
+```{r, warning= FALSE}
+library(RANN)
+library(DMwR)
+
+impute_num = preProcess(x = train_data[, !colnames(train_data) %in% c("Income")], method = c("knnImpute"))
+train_data = predict(impute_num, train_data)
+test_data = predict(impute_num, test_data)
+
+
+for (x in cat_cols){
+  # print (names(which(table(train_data[,x]) == max(table(train_data[,x])))))
+  subs = names(which(table(train_data[,x]) == max(table(train_data[,x]))))
+  train_data[,x][is.na(train_data[,x])] = subs
+  test_data[,x][is.na(test_data[,x])] = subs
+}
+
+sum(is.na(train_data))
+```
+
+
+## Standardize the Data
+
+* Standardize the continuous independent variables
+* The target variable is __wages__ , we will leave it as is.
+
+```{r}
+
+std_obj <- preProcess(x = train_data[, !colnames(train_data) %in% c("Income")],
+                      method = c("center", "scale"))
+
+train_std_data <- predict(std_obj, train_data)
+
+test_std_data <- predict(std_obj, test_data)
+
+```
+
+```{r}
+str(train_std_data)
+```
+
+
+## Dummify the Data
+
+* Use the dummyVars() function from caret to convert sex and age into dummy variables
+* Takes _character_ and _factors_ as _factors_ implicitly.
+
+```{r}
+
+dummy_obj <- dummyVars( ~ . , train_std_data)
+
+train_dummy_data <- as.data.frame(predict(dummy_obj, train_std_data))
+
+test_dummy_data <- as.data.frame(predict(dummy_obj, test_std_data))
+
+```
+
+# Basic regression model
+
+## Let us first build a linear regression model and test its performance
+```{r}
+model_basic <- lm(formula = Income~. , data = train_dummy_data)
+
+summary(model_basic)
+
+# par(mfrow = c(2,2))
+
+plot(model_basic)
+```
+
+## Prediction and evaluation of basic linear model
+
+```{r, warning=FALSE}
+library(DMwR)
+preds_model <- predict(model_basic, test_dummy_data[, !(names(test_dummy_data) %in% c("Income"))])
+# sum(is.na(train_dummy_data))
+preds_train = predict(model_basic, train_dummy_data[, !(names(train_dummy_data) %in% c("Income"))])
+
+regr.eval(trues =train_dummy_data$Income,preds = preds_train)
+regr.eval(trues =test_dummy_data$Income,preds = preds_model)
+
+```
+
+# Model Selection - Step AIC
+
+```{r}
+library(MASS)
+model_aic <- stepAIC(model_basic, direction = "both")
+
+summary(model_aic)
+
+par(mfrow = c(2,2))
+
+plot(model_aic)
+
+preds_train = predict(model_aic, train_dummy_data[, !(names(train_dummy_data) %in% c("Income"))])
+
+regr.eval(trues =train_dummy_data$Income,preds = preds_train)
+
+preds_model <- predict(model_aic, test_dummy_data[, !(names(test_dummy_data) %in% c("Income"))])
+
+regr.eval(trues =test_dummy_data$Income,preds = preds_model)
+```
+
+# Regularization techniques
+
+## Ridge and Lasso Regression
+
+RIDGE - $$RSS(\beta) + \lambda \sum_{j=1}^{p} \beta_j^2$$
+
+LASSO - $$RSS(\beta) + \lambda \sum_{j=1}^{p} |\beta_j|$$
+
+Elastic Net - $$ RSS (\beta) + \lambda (\alpha (\sum_{j=1}^{p} |\beta_j|) + (1-\alpha)(\sum_{j=1}^{p} \beta_j^2))$$
+
+p - number of attributes
+
+
+
+## Get the data into a compatible format
+
+* The functions we will be using today from the glmnet package expect a matrix as an input, so let us convert our dataframes into a matrix
+
+```{r}
+
+X_train <- as.matrix(train_dummy_data[, -3])
+  
+y_train <- as.matrix(train_dummy_data[, 3])
+  
+X_test <- as.matrix(test_dummy_data[, -3])
+  
+y_test <- as.matrix(test_dummy_data[, 3])
+
+```
+
+## Building the Lasso Regression Model
+ 
+ * I am selecting a random lambda for the initial model, we will find the best lambda using advanced techniques.
+ 
+```{r, warning=FALSE}
+library(glmnet)
+lasso_model <- glmnet(X_train, y_train, lambda = 0.5, alpha = 1)
+
+coef(lasso_model)
+
+preds_train = predict(lasso_model, X_train)
+
+regr.eval(trues =train_dummy_data$Income,preds = preds_train)
+
+preds_lasso <- predict(lasso_model, X_test)
+
+regr.eval(preds_lasso,test_dummy_data)
+```
+
+
+## Building the Ridge Regression Model
+
+ * I am selecting a random lambda for the initial model, we will find the best lambda using advanced techniques.
+ 
+```{r}
+
+ridge_model <- glmnet(X_train, y_train, lambda = 0.5, alpha = 0)
+
+coef(ridge_model)
+
+
+preds_train = predict(ridge_model, X_train)
+
+regr.eval(trues =train_dummy_data$Income,preds = preds_train)
+
+
+preds_ridge <- predict(ridge_model, X_test)
+regr.eval(preds_ridge,test_dummy_data)
+```
+
+## Finding the best lambda for Lasso Regression
+
+* The alpha value is 1 for lasso regression
+
+* in the plots, the numbers at the top signify the number of co-efficients which are not 0.
+
+```{r}
+
+library(glmnet)
+
+cv_lasso <- cv.glmnet(X_train, y_train, alpha = 1, type.measure = "mse", nfolds = 4)
+
+plot(cv_lasso)
+
+plot(cv_lasso$glmnet.fit, xvar="lambda", label=TRUE)
+
+```
+
+* The object returned form the call to cv.glmnet() function, contains the lambda values of importance
+
+* The coefficients are accessible calling the coef() function on the cv_lasso object
+
+* lambda - 	the values of lambda used in the fits.
+
+* cvm - The mean cross-validated error - a vector of length length(lambda).
+
+* cvsd -	estimate of standard error of cvm.
+
+* cvup - upper curve = cvm+cvsd.
+
+* cvlo - lower curve = cvm-cvsd.
+
+* nzero - number of non-zero coefficients at each lambda.
+
+
+```{r}
+
+print(cv_lasso$lambda.min)
+
+coef(cv_lasso)
+
+```
+
+## Finding the best lambda for Ridge Regression
+
+* The alpha value is 0 for ridge regression
+
+```{r}
+
+cv_ridge <- cv.glmnet(X_train, y_train, alpha = 0, type.measure = "mse", nfolds = 4)
+
+plot(cv_ridge)
+
+plot(cv_ridge$glmnet.fit, xvar="lambda", label=TRUE)
+
+```
+
+
+* We can access the lambda and the coefficients as we did before
+
+```{r}
+
+print(cv_ridge$lambda.min)
+
+coef(cv_ridge)
+
+```
+
+
+# Building The Final Model
+
+* By using the optimal lambda values obtained above, we can build our ridge and lasso models
+
+## Building the Final Lasso Regression Model
+
+```{r}
+
+lasso_model <- glmnet(X_train, y_train, lambda = cv_lasso$lambda.min, alpha = 1)
+
+coef(lasso_model)
+cv_lasso$lambda.min
+```
+
+* Use the model to predict on test data
+
+```{r}
+
+preds_lasso <- predict(lasso_model, X_test)
+
+```
+
+## Lasso Regression Model Metrics
+
+```{r}
+library(DMwR)
+preds_train = predict(lasso_model, X_train)
+
+regr.eval(trues =train_dummy_data$Income,preds = preds_train)
+
+regr.eval(trues = y_test, preds = preds_lasso)
+```
+
+## Building the Final Ridge Regression Model
+
+```{r}
+
+ridge_model <- glmnet(X_train, y_train, lambda = cv_ridge$lambda.min, alpha = 0)
+
+coef(ridge_model)
+
+```
+
+* Use the model to predict on test data
+
+```{r}
+
+preds_ridge <- predict(ridge_model, X_test)
+
+```
+
+## Ridge Regression Model Metrics
+
+```{r}
+
+library(DMwR)
+
+preds_train = predict(ridge_model,X_train)
+
+regr.eval(trues =train_dummy_data$Income,preds = preds_train)
+
+regr.eval(trues = y_test, preds = preds_ridge)
+
+```
+
+
+# Elastic Net Model
+
+
+```{r}
+library(glmnet)
+# Grid search
+sampling_strategy <- trainControl(method = "cv", number = 5)
+elastic_net_model <- train(Income ~ ., train_dummy_data,
+                           method = "glmnet", 
+                           trControl = sampling_strategy,
+                           metric = "RMSE",
+                           tuneGrid = 
+                             expand.grid(.alpha = seq(.05,
+                                                      1,
+                                              length = 10),
+                                  .lambda = c((1:20)/10)))
+```
+
+```{r}
+# elastic_net_model$finalModel
+```
+
+
+
+```{r}
+plot(elastic_net_model)
+```
+
+### Evaluate the Elastic Net Model
+
+```{r}
+
+preds_train = predict(elastic_net_model, train_dummy_data[, !(names(train_dummy_data) %in% c("Income"))])
+
+regr.eval(trues =train_dummy_data$Income,preds = preds_train)
+
+preds_elastic <- predict(elastic_net_model, test_dummy_data)
+regr.eval(trues = test_dummy_data[, 3], preds = preds_elastic)
+```
+
+* MAPE of Elastic Net is far worse than LASSO and Ridge, this is because the search space was not enough, we can increase the search space and try again.
+
+
