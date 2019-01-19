@@ -44,6 +44,8 @@ data = readRDS("ecommerceData.RData")
 ## Dimension of the Data set
 dim(data)
 
+str(data)
+
 ## Look at the summary statistics
 summary(data)
 ```
@@ -88,6 +90,8 @@ data$Date = as.Date(data$Date, format="%Y-%m-%d")
 # Summary of the data
 summary(data)
 
+str(data)
+
 # Re-look at the first 6 records
 head(data)
 ```
@@ -115,6 +119,7 @@ head(data,10)
 data = data %>% group_by(Date) %>% summarise("MinPrice" = min(Price))
 class(data)
 typeof(data)
+
 data = data.frame(data)
 
 head(data,10)
@@ -340,6 +345,12 @@ lm2TrainError
 lm2TestError
 ```
 ### Seasonal Linear Regression Model using dummies
+
+```{r}
+train
+```
+
+
 ```{r}
 str(train)
 slm1 <- lm(MeanPrice~., data=train)
@@ -366,6 +377,13 @@ pred_Test = predict(slm3, test)
 
 plot(train$MeanPrice, type="l")
 points(train$Time, pred_Train, type="l", col="red", lwd=2)
+
+```
+```{r}
+slm1TrainError = regr.eval(train$MeanPrice, pred_Train)
+slm1TestError = regr.eval(test$MeanPrice, pred_Test)
+slm1TrainError
+slm1TestError
 
 ```
 

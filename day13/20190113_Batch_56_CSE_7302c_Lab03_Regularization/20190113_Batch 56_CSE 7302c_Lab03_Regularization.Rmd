@@ -160,6 +160,11 @@ for (x in cat_cols){
 sum(is.na(train_data))
 ```
 
+```{r}
+test_data
+```
+
+
 
 ## Standardize the Data
 
@@ -195,6 +200,10 @@ train_dummy_data <- as.data.frame(predict(dummy_obj, train_std_data))
 
 test_dummy_data <- as.data.frame(predict(dummy_obj, test_std_data))
 
+```
+
+```{r}
+train_dummy_data
 ```
 
 # Basic regression model
@@ -235,6 +244,9 @@ par(mfrow = c(2,2))
 
 plot(model_aic)
 
+```
+
+```{r}
 preds_train = predict(model_aic, train_dummy_data[, !(names(train_dummy_data) %in% c("Income"))])
 
 regr.eval(trues =train_dummy_data$Income,preds = preds_train)
@@ -242,7 +254,9 @@ regr.eval(trues =train_dummy_data$Income,preds = preds_train)
 preds_model <- predict(model_aic, test_dummy_data[, !(names(test_dummy_data) %in% c("Income"))])
 
 regr.eval(trues =test_dummy_data$Income,preds = preds_model)
+
 ```
+
 
 # Regularization techniques
 
@@ -351,6 +365,7 @@ plot(cv_lasso$glmnet.fit, xvar="lambda", label=TRUE)
 
 ```{r}
 
+print(cv_lasso)
 print(cv_lasso$lambda.min)
 
 coef(cv_lasso)
@@ -465,7 +480,7 @@ elastic_net_model <- train(Income ~ .,
 ```
 
 ```{r}
-#elastic_net_model$finalModel
+elastic_net_model
 ```
 
 
