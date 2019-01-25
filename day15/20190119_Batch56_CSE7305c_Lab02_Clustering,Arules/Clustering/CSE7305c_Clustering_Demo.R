@@ -174,6 +174,7 @@ for (i in 1:4){
   plot(sample_data[,c("Sepal.Length", "Sepal.Width")] , col = clus$cluster, pch = 16)
   #Here clusters in Figures 2,3 and 4 look stable
 }
+
 #resetting to original
 par(mfrow = c(1,1))
 
