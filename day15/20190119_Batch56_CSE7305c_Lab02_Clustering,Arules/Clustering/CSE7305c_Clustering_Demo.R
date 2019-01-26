@@ -19,7 +19,9 @@ dim(data)
 x <- matrix(1:10, ncol = 2)
 x
 scale(x, scale = F)
+
 scale(x, center=F,scale = F)
+
 scale(x, scale = T)
 scale(x, center=F,scale = T)
 rm(x)
@@ -108,6 +110,7 @@ clus$betweenss
 
 # Calculation of withinss
 x = split(data1, clus$cluster)
+x
 sapply(x, function(x) sum(scale(x, scale = FALSE)^2)) 
 rm(x)
 
@@ -179,3 +182,5 @@ for (i in 1:4){
 par(mfrow = c(1,1))
 
 # ------------------------------------end------------------------------------------------------------------------------
+
+
