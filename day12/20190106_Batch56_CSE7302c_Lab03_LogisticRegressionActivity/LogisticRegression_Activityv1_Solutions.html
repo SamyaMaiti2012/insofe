@@ -227,7 +227,7 @@ div.tocify {
 
 
 <p><strong>NOTE</strong> Before starting this assignment please remember to clear your environment, you can do that by running the following code chunk</p>
-<pre class="r"><code>rm(list = ls(all=TRUE))</code></pre>
+<pre class="r"><code>rm(list=ls(all=TRUE))</code></pre>
 <div id="agenda" class="section level1">
 <h1>Agenda</h1>
 <ul>
@@ -251,12 +251,7 @@ div.tocify {
 <div id="read-the-data" class="section level2">
 <h2>Read the Data</h2>
 <p>Make sure the dataset is located in your current working directory, else you can change your working directory using the “setwd()” function.</p>
-<pre class="r"><code>getwd()</code></pre>
-<pre><code>## [1] &quot;/Users/samyam/Documents/Samya/Insofe/insofe/day12/20190106_Batch56_CSE7302c_Lab03_LogisticRegressionActivity&quot;</code></pre>
-<pre class="r"><code>setwd(&quot;/Users/samyam/Documents/Samya/Insofe/insofe/day12/20190106_Batch56_CSE7302c_Lab03_LogisticRegressionActivity&quot;)
-getwd()</code></pre>
-<pre><code>## [1] &quot;/Users/samyam/Documents/Samya/Insofe/insofe/day12/20190106_Batch56_CSE7302c_Lab03_LogisticRegressionActivity&quot;</code></pre>
-<pre class="r"><code>bank_data = read.csv(file = &quot;bank.txt&quot;,header = T,sep = ';')</code></pre>
+<pre class="r"><code>bank_data &lt;- read.table(&quot;bank.txt&quot;, header=T, sep=&quot;;&quot;)</code></pre>
 </div>
 <div id="data-description" class="section level2">
 <h2>Data Description</h2>
@@ -289,8 +284,6 @@ getwd()</code></pre>
 <li><p>Use the str() function to get the dimensions and types of attributes in the dataset</p></li>
 <li><p>The dataset has 4521 observations and 17 variables</p></li>
 </ul>
-<pre class="r"><code>dim(bank_data)</code></pre>
-<pre><code>## [1] 4521   17</code></pre>
 <pre class="r"><code>str(bank_data)</code></pre>
 <pre><code>## 'data.frame':    4521 obs. of  17 variables:
 ##  $ age      : int  30 33 35 30 59 35 36 39 41 43 ...
@@ -388,13 +381,8 @@ getwd()</code></pre>
 <ul>
 <li>Check the number of missing values in the data frame</li>
 </ul>
-<pre class="r"><code>colSums(is.na(bank_data))</code></pre>
-<pre><code>##       age       job   marital education   default   balance   housing 
-##         0         0         0         0         0         0         0 
-##      loan   contact       day     month  duration  campaign     pdays 
-##         0         0         0         0         0         0         0 
-##  previous  poutcome         y 
-##         0         0         0</code></pre>
+<pre class="r"><code>sum(is.na(bank_data))</code></pre>
+<pre><code>## [1] 0</code></pre>
 </div>
 <div id="traintest-split" class="section level2">
 <h2>Train/Test Split</h2>
@@ -402,26 +390,47 @@ getwd()</code></pre>
 <li><p>Split the data 70/30 into train and test sets by using <strong>Stratified Sampling</strong> and setting the seed as “786”</p></li>
 <li><p>Split the data using stratified sampling, we can do that by using the createDataPartition() function from the caret package</p></li>
 </ul>
-<pre class="r"><code>set.seed(786)
-library(caret)</code></pre>
+<pre class="r"><code>library(caret)</code></pre>
 <pre><code>## Warning: package 'caret' was built under R version 3.4.4</code></pre>
 <pre><code>## Loading required package: lattice</code></pre>
 <pre><code>## Loading required package: ggplot2</code></pre>
 <pre><code>## Warning: package 'ggplot2' was built under R version 3.4.4</code></pre>
 <pre><code>## Warning in as.POSIXlt.POSIXct(Sys.time()): unknown timezone 'zone/tz/2018i.
 ## 1.0/zoneinfo/Asia/Kolkata'</code></pre>
-<pre class="r"><code># The argument &quot;y&quot; to the createDataPartition() function is the response variable
+<pre class="r"><code>set.seed(786)
+
+# The argument &quot;y&quot; to the createDataPartition() function is the response variable
+
 # The argument &quot;p&quot; is the percentage of data that goes to training
-# The argument &quot;list&quot; should be input a boolean (T or F). Remember to put list = F, else the output is going to  be a list and your data can't be subsetted with it</code></pre>
-<pre class="r"><code>train_row = createDataPartition(bank_data$y, p=0.7, list = F)
 
-train_bank = bank_data[ train_row, ]
-test_bank = bank_data[ -train_row, ]
+# The argument &quot;list&quot; should be input a boolean (T or F). Remember to put list = F, else the output is going to  be a list and your data can't be subsetted with it
 
-dim(train_bank)</code></pre>
-<pre><code>## [1] 3165   17</code></pre>
-<pre class="r"><code>dim(test_bank)</code></pre>
-<pre><code>## [1] 1356   17</code></pre>
+train_rows &lt;- createDataPartition(bank_data$y, p = 0.7, list = F)
+
+train_data &lt;- bank_data[train_rows, ]
+
+test_data &lt;- bank_data[-train_rows, ]</code></pre>
+<pre class="r"><code>dim(train_rows)</code></pre>
+<pre><code>## [1] 3165    1</code></pre>
+<pre class="r"><code>str(train_data)</code></pre>
+<pre><code>## 'data.frame':    3165 obs. of  17 variables:
+##  $ age      : int  30 33 35 30 36 43 39 31 56 37 ...
+##  $ job      : Factor w/ 12 levels &quot;admin.&quot;,&quot;blue-collar&quot;,..: 11 8 5 5 7 8 8 2 10 1 ...
+##  $ marital  : Factor w/ 3 levels &quot;divorced&quot;,&quot;married&quot;,..: 2 2 3 2 2 2 2 2 2 3 ...
+##  $ education: Factor w/ 4 levels &quot;primary&quot;,&quot;secondary&quot;,..: 1 2 3 3 3 1 2 2 2 3 ...
+##  $ default  : Factor w/ 2 levels &quot;no&quot;,&quot;yes&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ balance  : int  1787 4789 1350 1476 307 -88 9374 360 4073 2317 ...
+##  $ housing  : Factor w/ 2 levels &quot;no&quot;,&quot;yes&quot;: 1 2 2 2 2 2 2 2 1 2 ...
+##  $ loan     : Factor w/ 2 levels &quot;no&quot;,&quot;yes&quot;: 1 2 1 2 1 2 1 2 1 1 ...
+##  $ contact  : Factor w/ 3 levels &quot;cellular&quot;,&quot;telephone&quot;,..: 1 1 1 3 1 1 3 1 1 1 ...
+##  $ day      : int  19 11 16 3 14 17 20 29 27 20 ...
+##  $ month    : Factor w/ 12 levels &quot;apr&quot;,&quot;aug&quot;,&quot;dec&quot;,..: 11 9 1 7 9 1 9 5 2 1 ...
+##  $ duration : int  79 220 185 199 341 313 273 89 239 114 ...
+##  $ campaign : int  1 1 1 4 1 1 1 1 5 1 ...
+##  $ pdays    : int  -1 339 330 -1 330 147 -1 241 -1 152 ...
+##  $ previous : int  0 4 1 0 2 2 0 1 0 2 ...
+##  $ poutcome : Factor w/ 4 levels &quot;failure&quot;,&quot;other&quot;,..: 4 1 1 4 2 1 4 1 4 1 ...
+##  $ y        : Factor w/ 2 levels &quot;no&quot;,&quot;yes&quot;: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
 </div>
 </div>
 <div id="build-a-model" class="section level1">
@@ -432,14 +441,14 @@ dim(train_bank)</code></pre>
 <li><p>Use the glm() function to build a basic model</p></li>
 <li><p>Build a model using all the variables, excluding the response variable, in the dataset</p></li>
 </ul>
-<pre class="r"><code>model_bank = glm(formula = y ~ ., data = (train_bank), family = binomial)</code></pre>
+<pre class="r"><code>log_reg &lt;- glm(y~., data = train_data, family = binomial)</code></pre>
 <ul>
 <li>Get the summary of the model and understand the output</li>
 </ul>
-<pre class="r"><code>summary(model_bank)</code></pre>
+<pre class="r"><code>summary(log_reg)</code></pre>
 <pre><code>## 
 ## Call:
-## glm(formula = y ~ ., family = binomial, data = (train_bank))
+## glm(formula = y ~ ., family = binomial, data = train_data)
 ## 
 ## Deviance Residuals: 
 ##     Min       1Q   Median       3Q      Max  
@@ -500,80 +509,31 @@ dim(train_bank)</code></pre>
 ## AIC: 1550.5
 ## 
 ## Number of Fisher Scoring iterations: 6</code></pre>
-</div>
-</div>
-<div id="roc" class="section level1">
-<h1>ROC</h1>
-<div id="predicted-values-are-between-0-and-1" class="section level2">
-<h2>Predicted Values are between 0 and 1</h2>
-<ul>
-<li><p>The predict() function on the “glm” object of “binomial” family gives a probability score between 0 and 1, NOT the original levels (0 and 1) of the response variable</p></li>
-<li><p>Hence we must first choose a cutoff point for getting to the original levels of the response variables</p></li>
-<li><p>To choose the cutoff point we will use the train data, as test data should not be used to make any decisions regarding the model</p></li>
-</ul>
-</div>
-<div id="creating-an-roc-plot" class="section level2">
-<h2>Creating an ROC plot</h2>
-<p><strong>Steps to create an ROC plot :</strong></p>
 <ol style="list-style-type: decimal">
 <li>Get a list of predictions (probability scores) using the predict() function</li>
 </ol>
 <pre class="r"><code># Use the argument 'type = &quot;response&quot;' in the predict function to get a list of predictions between 0 and 1
 
-# By default if no dataset is mentioned, training data is used</code></pre>
-<ol start="2" style="list-style-type: decimal">
-<li>Using the ROCR package create a “prediction()” object</li>
-</ol>
-<pre class="r"><code># The prediction object takes the probability scores and the original levels for theses data as input
+# By default if no dataset is mentioned, training data is used
 
+prob_train &lt;- predict(log_reg, type = &quot;response&quot;)
 
-# The prediction object contains a list of predictions (probability scores), original class labels, cutoffs, false positives, true positives, true negatives, false negatives, No. of positive predictions and No. of negative predictions corresponding to these cutoffs. Class distribution in the dataset.
-
-prob_train = predict(model_bank, type = &quot;response&quot;)
 prob_train[1:6]</code></pre>
 <pre><code>##          1          2          3          4          7         10 
 ## 0.07873379 0.03490491 0.13129179 0.01570341 0.17692036 0.05087197</code></pre>
-<ol start="3" style="list-style-type: decimal">
-<li>Extract performance measures (True Positive Rate and False Positive Rate) using the “performance()” function from the ROCR package</li>
-</ol>
-<pre class="r"><code># The performance() function from the ROCR package helps us extract metrics such as True positive rate, False positive rate etc. from the prediction object, we created above.
-
-# Two measures (y-axis = tpr, x-axis = fpr) are extracted</code></pre>
-<ol start="4" style="list-style-type: decimal">
-<li>Plot the ROC curve using the extracted performance measures (TPR and FPR)</li>
-</ol>
-<ul>
-<li><p>Extract the AUC score of the ROC curve and store it in a variable named “auc”</p></li>
-<li><p>Use the performance() function on the prediction object created above using the ROCR package, to extract the AUC score</p></li>
-</ul>
-<pre class="r"><code># Access the auc score from the performance object</code></pre>
-</div>
-<div id="choose-a-cutoff-value" class="section level2">
-<h2>Choose a Cutoff Value</h2>
-<ul>
-<li><p>Based on the trade off between TPR and FPR depending on the business domain, a call on the cutoff has to be made.</p></li>
-<li><p>A cutoff of 0.1 can be chosen</p></li>
-</ul>
 </div>
 <div id="predictions-on-test-data" class="section level2">
 <h2>Predictions on test data</h2>
 <ul>
 <li>After choosing a cutoff value of 0.1, let’s predict the class labels on the test data using our model</li>
 </ul>
-<pre class="r"><code>prob_test = predict(model_bank, test_bank, type = &quot;response&quot;)
-prob_test[1:6]</code></pre>
-<pre><code>##           5           6           8           9          12          13 
-## 0.006352626 0.156708367 0.020821464 0.005953253 0.056127147 0.117763448</code></pre>
-<pre class="r"><code>pred_test = ifelse(prob_test &gt; 0.1, 1, 0)
-pred_train = ifelse(prob_train &gt; 0.1, 1, 0)
+<pre class="r"><code>prob_test &lt;- predict(log_reg, test_data, type = &quot;response&quot;)
 
-pred_train[1:6]</code></pre>
-<pre><code>##  1  2  3  4  7 10 
-##  0  0  1  0  1  0</code></pre>
-<pre class="r"><code>pred_test[1:6]</code></pre>
-<pre><code>##  5  6  8  9 12 13 
-##  0  1  0  0  0  1</code></pre>
+preds_test &lt;- ifelse(prob_test &gt; 0.5, 1, 0)</code></pre>
 </div>
+</div>
+<div id="calculate-the-confusion-matrix-table-for-the-train-data" class="section level1">
+<h1>Calculate the Confusion Matrix Table for the Train Data</h1>
 </div>
 <div id="evaluation-metrics-for-classification" class="section level1">
 <h1>Evaluation Metrics for classification</h1>
@@ -584,17 +544,15 @@ pred_train[1:6]</code></pre>
 <ul>
 <li>Create a confusion matrix using the table() function</li>
 </ul>
-<pre class="r"><code>#confusionMatrix(pred_train, test_bank$y)
-table(test_bank$y,pred_test)</code></pre>
-<pre><code>##      pred_test
-##         0   1
-##   no  956 244
-##   yes  32 124</code></pre>
-<pre class="r"><code>table(train_bank$y,pred_train)</code></pre>
-<pre><code>##      pred_train
-##          0    1
-##   no  2288  512
-##   yes   45  320</code></pre>
+<pre class="r"><code>test_data_labs &lt;- test_data$y
+
+conf_matrix &lt;- table(test_data_labs, preds_test)
+
+print(conf_matrix)</code></pre>
+<pre><code>##               preds_test
+## test_data_labs    0    1
+##            no  1161   39
+##            yes  102   54</code></pre>
 </div>
 <div id="specificity" class="section level3">
 <h3>Specificity</h3>
@@ -602,6 +560,10 @@ table(test_bank$y,pred_test)</code></pre>
 <li>The Proportion of correctly identified negatives by the test/model.</li>
 </ul>
 <p><span class="math display">\[{Specificity} = \frac{Number~of~True~Negatives}{Number~of~True~Negatives + Number~of~False~Positives}\]</span></p>
+<pre class="r"><code>specificity &lt;- conf_matrix[1, 1]/sum(conf_matrix[1, ])
+
+print(specificity)</code></pre>
+<pre><code>## [1] 0.9675</code></pre>
 </div>
 <div id="sensitivity" class="section level3">
 <h3>Sensitivity</h3>
@@ -609,6 +571,10 @@ table(test_bank$y,pred_test)</code></pre>
 <li>The Proportion of correctly identified positives by the test/model.</li>
 </ul>
 <p><span class="math display">\[{Sensitivity} = \frac{Number~of~True~Positives}{Number~of~True~Positives + Number~of~False~Negatives}\]</span></p>
+<pre class="r"><code>sensitivity &lt;- conf_matrix[2, 2]/sum(conf_matrix[2, ])
+
+print(sensitivity)</code></pre>
+<pre><code>## [1] 0.3461538</code></pre>
 </div>
 <div id="accuracy" class="section level3">
 <h3>Accuracy</h3>
@@ -616,14 +582,11 @@ table(test_bank$y,pred_test)</code></pre>
 <li>The Proportion of correctly identified psotivies/negatives in the entire population by the test/model</li>
 </ul>
 <p><span class="math display">\[{Accuracy} = \frac{Number~of~True~Positives +Number~of~True~Negatives}{Number~Of~Subjects~in~the~Population}\]</span></p>
+<pre class="r"><code>accuracy &lt;- sum(diag(conf_matrix))/sum(conf_matrix)
+
+print(accuracy)</code></pre>
+<pre><code>## [1] 0.8960177</code></pre>
 </div>
-</div>
-<div id="automated-computation-through-caret" class="section level2">
-<h2>Automated Computation through Caret</h2>
-<ul>
-<li>Evaluation metrics for classification can be accessed through the “confusionMatrix()” function from the caret package</li>
-</ul>
-<pre class="r"><code># Using the argument &quot;Positive&quot;, we can get the evaluation metrics according to our positive referene level</code></pre>
 </div>
 </div>
 
