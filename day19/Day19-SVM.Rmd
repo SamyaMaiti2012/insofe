@@ -1,0 +1,79 @@
+---
+title: "Day19-SVM"
+author: "Samya"
+date: "2/9/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+rm(list=ls(all=T))
+setwd("/Users/samyam/Documents/Samya/Insofe/insofe/day19")
+set.seed(777)
+```
+
+```{r}
+cancer_data = read.csv("cancer_diagnosis.csv")
+head(cancer_data)
+tail(cancer_data)
+```
+
+```{r}
+str(cancer_data)
+```
+
+```{r}
+summary(cancer_data)
+```
+
+```{r}
+sum(is.na(cancer_data))
+```
+
+```{r}
+cancer_data$Cancer=as.factor(cancer_data$Cancer)
+cancer_data = cancer_data[, !(colnames(cancer_data) %in% c('id'))]
+```
+
+```{r}
+library(caret)
+```
+
+```{r}
+train_row = createDataPartition(y = cancer_data$Cancer, p=0.7, list = F)
+pre_train = cancer_data[train_row, ]
+pre_test = cancer_data[-train_row, ]
+```
+
+```{r}
+std_method = preProcess(pre_train, method = c("center", "scale"))
+train_data = predict(std_method, pre_train)
+test_data = predict(std_method, pre_test)
+```
+
+```{r}
+dim(train_data)
+dim(test_data)
+
+```
+```{r}
+library(e1071)
+```
+
+```{r}
+model_svm = svm(Cancer ~ ., train_data, kernel = "linear")
+summary(model_svm)
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+
