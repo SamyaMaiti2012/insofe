@@ -1,0 +1,113 @@
+---
+title: "Day18"
+author: "Samya"
+date: "2/9/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r cars}
+rm(list=ls(all=T))
+setwd("/Users/samyam/Documents/Samya/Insofe/insofe/day19")
+set.seed(777)
+```
+
+```{r pressure, echo=FALSE}
+flight = read.csv("FlightDelays.csv",header=T)
+head(flight)
+tail(flight)
+```
+```{r}
+str(flight)
+```
+```{r}
+summary(flight)
+```
+
+```{r}
+sum(is.na(flight))
+```
+
+```{r}
+flight$Weather = as.factor(flight$Weather)
+flight$DAY_WEEK = as.factor(flight$DAY_WEEK)
+flight$Flight.Status = ifelse(flight$Flight.Status == 0, "on-time", "delayed")
+flight$Flight.Status = as.factor(flight$Flight.Status)
+```
+
+```{r}
+str(flight)
+```
+
+```{r}
+summary(flight)
+```
+
+```{r}
+flight$level = ifelse(flight$DEP_TIME >= 600 & flight$DEP_TIME <= 1200, "level1", 
+                      ifelse(flight$DEP_TIME >= 1200 & flight$DEP_TIME <= 1800, "level2", 
+                             ifelse(flight$DEP_TIME >= 1800 & flight$DEP_TIME <= 2100, "level3", "level4")))
+
+flight$level = as.factor(flight$level)
+flight$DEP_TIME = NULL
+```
+
+```{r}
+str(flight)
+```
+
+```{r}
+summary(flight)
+```
+```{r}
+library(caret)
+```
+
+```{r}
+train_row = createDataPartition(y = flight$Flight.Status, p=0.7, list = F)
+train = flight[train_row, ]
+test = flight[-train_row, ]
+```
+
+```{r}
+dim(train)
+dim(test)
+```
+
+```{r}
+library(e1071)
+```
+
+```{r}
+model_nb = naiveBayes(train$Flight.Status ~ ., data = train)
+print(model_nb)
+```
+
+```{r}
+preds_train = predict(model_nb, train)
+head(preds_train)
+```
+```{r}
+confusionMatrix(data = preds_train, reference = train$Flight.Status)
+```
+
+```{r}
+preds_test = predict(model_nb, test)
+head(preds_test)
+```
+
+```{r}
+confusionMatrix(data = preds_test, reference = test$Flight.Status)
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+

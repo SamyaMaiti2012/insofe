@@ -103,6 +103,9 @@ s <- diag(SVD$d)
 u <- SVD$u
 v <- SVD$v
 ```
+```{r}
+u
+```
 
 ## Function to extract top Z nearest users with respect to the given user using cosine similarity
 
