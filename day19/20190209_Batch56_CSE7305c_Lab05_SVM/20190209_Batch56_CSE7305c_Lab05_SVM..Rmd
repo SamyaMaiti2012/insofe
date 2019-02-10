@@ -1,0 +1,313 @@
+---
+title: "Using Support Vectors to Predict Cancer"
+author: "Insofe Lab Activity for SVM"
+date: "9th Feb 2019"
+output:
+  html_document:
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+---
+
+**NOTE** Before starting this assignment please remember to clear your environment, you can do that by running the following code chunk
+
+```{r}
+
+rm(list = ls(all=TRUE))
+
+```
+
+**NOTE** Be careful with moving back and forth the various sections in this assignment as we will be building a lot of models and unexpected things might happen if you don't carefully handle the objects in your global environment
+
+## Agenda 
+
+* Read in the data
+
+* Data Pre-processing
+
+* Build a linear SVM model
+
+* Do cross validation for finding the optimal C value
+
+* Build SVM with Kernels
+
+* Report Metrics of the various Models on Test Data
+
+# Reading & Understanding the Data
+
+* Read in the .csv file
+
+```{r}
+
+# change your working directory using the "setwd()" function, if your dataset is located elsewhere
+
+cancer_data <- read.csv("cancer_diagnosis.csv")
+
+```
+
+* Get a feel for the data using the str() function 
+
+```{r}
+
+str(cancer_data)
+
+```
+
+The dataset has 569 observations with 32 variables, the descriptions of the variables are given below :
+
+1) **id** : Unique identification number of the sample
+
+2) **Cancer** : This column represents whether the patient has a benign/normal tumor (0) or a cancerous one ("1")
+
+3) **The remaining 30 variables** are real valued measurements some of which are given below:
+
+	* radius (mean of distances from center to points on the perimeter)
+	* texture (standard deviation of gray-scale values)
+	* perimeter
+	* area
+	* smoothness (local variation in radius lengths)
+	* compactness (perimeter^2 / area - 1.0)
+	* concavity (severity of concave portions of the contour)
+	* concave points (number of concave portions of the contour)
+	* symmetry 
+	* fractal dimension ("coastline approximation" - 1)
+	
+
+* Let's look at the head and tail of the dataset
+
+```{r}
+
+head(cancer_data)
+
+tail(cancer_data)
+
+```
+
+# Data Pre-processing
+
+* Let's convert the Cancer column into a factor, because it was read in as a numeric attribute (1 is if the patient has cancer and 0 is if the patient does not have cancer)
+
+```{r}
+
+cancer_data$Cancer <- as.factor(cancer_data$Cancer)
+
+```
+
+* Let's now remove the irrelevant column of "id" from the dataset
+
+```{r}
+
+cancer_data <- cancer_data[ , !(colnames(cancer_data) %in% "id")]
+
+```
+
+* Let's verify if there are any missing values in the dataset
+
+```{r}
+
+sum(is.na(cancer_data))
+
+```
+
+* Split the dataset into train and test using using stratified sampling using the caret package
+
+```{r}
+
+library(caret)
+
+set.seed(1234)
+
+index_train <- createDataPartition(cancer_data$Cancer, p = 0.7, list = F)
+
+pre_train <- cancer_data[index_train, ]
+
+pre_test <- cancer_data[-index_train, ]
+
+```
+
+* Standardize all the real valued variables in the dataset as it provides numerical stability to the svm solution
+
+* Let's use the preProcess() function from the caret package to standardize the variables, using just the data points in the training data
+
+```{r}
+
+std_method <- preProcess(pre_train, method = c("center", "scale"))
+
+train_data <- predict(std_method, pre_train)
+  
+test_data <- predict(std_method, pre_test)
+
+```
+
+
+# Building Multiple SVM models
+
+* Let's first start out building a linear SVM and tune the model to get a decent C value
+
+## Linear SVM
+
+* We can build the most basic linear SVM, with default parameters using the svm() function from the e1071 package
+
+```{r}
+
+library(e1071)
+
+model_svm <- svm(Cancer ~ . , train_data, kernel = "linear")
+
+summary(model_svm)
+
+```
+
+### Understanding the importance of C in SVM
+
+![](img/svm_margin.jpg)
+
+* From above we see that the margin obtained by using C = 100 might not be the optimal linear classifier
+
+![](img/soft_margin.png)
+
+* So, higher the value of C, the more chance there is that the model is sensitive to noise and outliers
+
+### Tuning for the optimal C
+
+* Now, let's create a sampling strategy using the trainControl() function and use the train() function from the caret package to get the best value of C
+
+* One way to tune models, is first using an exponential search space and then doing a more refined search near the optimal area
+
+```{r}
+
+library(caret)
+
+sampling_strategy <- trainControl(method = "repeatedcv", number = 4, repeats = 10)
+
+svm_rough_model_c <- train(Cancer ~ . , train_data, method = "svmLinear",
+                     tuneGrid = data.frame(.C = c(10^-4, 10^-3, 10^-2, 10^-1, 10^1, 10^2, 10^3)), trControl = sampling_strategy)
+
+svm_rough_model_c
+
+```
+
+```{r}
+
+svm_fine_model_c <- train(Cancer ~ . , train_data, method = "svmLinear",
+                     tuneGrid = data.frame(.C = c(10^-0.25, 10^-0.5, 10^-0.75, 10^-1, 10^-1.25, 10^-1.5, 10^-1.75)), trControl = sampling_strategy, metric = "Accuracy")
+
+svm_fine_model_c
+
+```
+
+* Hence, from the above cross validation experiment, we can choose the C parameter that gives us the best cross validation accuracy
+
+* You might see a slightly different result due to the randomness that arises from the sampling process in cross validation
+
+* Let's measure the performance of our optimized svm on the test data 
+
+```{r}
+
+preds_svm <- predict(model_svm, test_data)
+
+preds_svm_optimized <- predict(svm_fine_model_c, test_data)
+
+confusionMatrix(preds_svm, test_data$Cancer)
+
+confusionMatrix(preds_svm_optimized, test_data$Cancer)
+
+```
+
+## Understanding the Kernel Trick
+
+* Firstly, we need to understand that a linear separation hyperplane might exist in a higher dimension, even if it does not exist in the current space
+
+![](img/data_2d_to_3d_hyperplane.png)
+
+
+![](img/kernel_viz.gif)
+
+* But the problem is that transforming the data to higher dimensions is computationally exhaustive
+
+* So, that is where the kernel trick comes in. 
+
+* For that we have to formulate our machine learning problem in terms of the dot product
+
+## Non-Linear SVMs
+
+* We can explore various kernel functions to compute the dot product in higher dimensions to find the maximum margin linear classifying boundary in the higher dimension, without transforming our data into a higher dimension space.
+  
+* We can access various non linear kernels from the kernlab package
+
+### Polynomial Kernel
+
+* We can build an svm model using the polynomial kernel, as below
+
+```{r}
+
+library(kernlab)
+
+svm_poly <- ksvm(Cancer ~ . , train_data, kernel = "polydot")
+
+svm_poly
+
+```
+
+```{r}
+
+svm_rough_model_poly <- train(Cancer ~ . , train_data, method = "svmPoly",
+                     tuneGrid = expand.grid(.C = c(10^-3, 10^-2.5, 10^-2.1, 10^-1.5, 10^-1.2, 10^-0.6), .degree = c(2, 3, 5), .scale = c(0.15, 0.25, 1)), trControl = sampling_strategy)
+
+svm_rough_model_poly
+
+```
+
+
+```{r}
+
+svm_rough_model_poly <- train(Cancer ~ . , train_data, method = "svmRadial",
+                     tuneGrid = expand.grid(.C = c(10^-3, 10^-2.5),
+                                            .sigma = c(10^3, 10^4, 10^5, 10^8, 10^-5, 10^-10, 10^-15),
+                                            .gamma = c(10^-3, 10^-2.5)),
+                     trControl = sampling_strategy)
+
+expand.grid(.C = c(2, 4, 8, 16), .gamma=c(1,10,100))
+
+svm_rough_model_poly
+
+```
+
+* Hence, we get the best model with the above parameters.
+
+```{r}
+
+preds_svm_poly <- predict(svm_rough_model_poly, test_data)
+
+confusionMatrix(preds_svm_poly, test_data$Cancer)
+
+```
+
+### RBF Kernel
+
+* We can build an svm model using the RBF kernel, as below
+
+```{r}
+
+library(kernlab)
+
+svm_poly <- ksvm(Cancer ~ . , train_data, kernel = "rbfdot")
+
+```
+
+```{r}
+
+svm_rough_model_rbf <- train(Cancer ~ . , train_data, method = "svmRadial",
+                     tuneGrid = expand.grid(.C = c(10^1), .sigma = c(10^3, 10^4, 10^5, 10^8, 10^-5, 10^-10, 10^-15)))
+
+svm_rough_model_rbf
+
+```
+
+* Hence, we can see that the rbf kernel is not a good fit here and therefore we do not proceed further
+
+
+
+
+
+
