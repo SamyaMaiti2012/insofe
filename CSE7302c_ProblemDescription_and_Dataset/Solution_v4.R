@@ -1,6 +1,8 @@
 library(DMwR)
 
 rm(list=ls(all=TRUE))
+options(warn=1)
+
 
 getwd()
 setwd("/Users/samyam/Documents/Samya/Insofe/insofe/CSE7302c_ProblemDescription_and_Dataset")
@@ -98,8 +100,9 @@ healthCaseDataWithoutDisCol = subset(healthCaseData, select = - c(ID, A11))
 head(healthCaseDataWithoutDisCol)
 
 
+
 # Define continuous & Categorical Columns
-continuousColumn = c('IV', 'A1', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A12', 'A14', 'A15', 'A16', 'A21')
+continuousColumn = c('IV', 'A1','A2','A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A12', 'A14', 'A15', 'A16', 'A21')
 continuousColumn
 catColumn = setdiff(names(healthCaseDataWithoutDisCol), continuousColumn)
 catColumn
@@ -144,6 +147,7 @@ head(healthCaseDataRefined)
 # Remove outliers Based on continuous variables
 boxplot(healthCaseDataRefined[continuousColumn], use.cols = TRUE)
 #looking at attribute IV, A5, A6, A7, A9, A10, A12 have few above 10000, so we will remove those datpoints if they are fraction of total population
+
 healthCaseDataFiltered = healthCaseDataRefined[(healthCaseDataRefined$IV <= 10000 & healthCaseDataRefined$A5 <= 4000 & healthCaseDataRefined$A6 <= 7000 & 
                                                   healthCaseDataRefined$A7 <= 10000 & healthCaseDataRefined$A9 <= 4000 & healthCaseDataRefined$A10 <= 6000 & 
                                                   healthCaseDataRefined$A12 <= 10000 & healthCaseDataRefined$A1 <= 2000 & healthCaseDataRefined$A3 <= 2000 &
@@ -155,6 +159,43 @@ cat("% of datapoints dropped : ", ((nrow(healthCaseData) -nrow(healthCaseDataFil
 str(healthCaseDataFiltered)
 summary(healthCaseDataFiltered)
 head(healthCaseDataFiltered)
+
+"
+par(mfrow=c(5,5))
+for (i in 1:length(healthCaseDataFiltered)) {
+  print(i)
+  plot(healthCaseDataFiltered[[i]], healthCaseDataFiltered$Target)
+}
+"
+
+
+
+#Identify any column that lineraly seperate the target
+plot(healthCaseDataFiltered$A17, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$A19, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$A20, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$IV, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$A1, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$A3, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$A4, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$A5, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$A6, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$A7, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$A8, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$A9, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$A10, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$A12, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$A14, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$A15, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$A16, healthCaseDataFiltered$Target)
+plot(healthCaseDataFiltered$A21, healthCaseDataFiltered$Target)
+
+library(logistf)
+model_healthCareData = logistf(formula = Target ~ A17+A19+A20+IV+A1+A2+A3+A4+A5+A6+A7+A8+A9+A10+A12+A14+A15+A16+A21, 
+                           data = (healthCaseDataFiltered), family = binomial)
+
+
+
 
 
 # Dummyfication before Splitting to ensure we dont encounter scenario of unseen data for both test & train.
@@ -168,6 +209,7 @@ head(healthCaseDataFilteredDummyfy)
 dim(healthCaseDataFilteredDummyfy)
 
 healthCaseDataFilteredDummyfy_1 = cbind(healthCaseDataFilteredDummyfy, healthCaseDataFiltered$Target)
+#Rename to Target
 names(healthCaseDataFilteredDummyfy_1)[names(healthCaseDataFilteredDummyfy_1) == 'healthCaseDataFiltered$Target'] = 'Target'
 str(healthCaseDataFilteredDummyfy_1)
 summary(healthCaseDataFilteredDummyfy_1)
@@ -238,28 +280,54 @@ head(train_data_Imputed_with_Stand)
 #Create model             
 model_healthCareData = glm(formula = Target ~ ., data = (train_data_Imputed_with_Stand), family = binomial)
 #http://r.789695.n4.nabble.com/glm-fit-quot-fitted-probabilities-numerically-0-or-1-occurred-quot-td849242.html
+#https://stats.stackexchange.com/questions/11109/how-to-deal-with-perfect-separation-in-logistic-regression 
 summary(model_healthCareData)
+
+
+
+
 "
 Observations:-
-1. Some of the variables are insignificant
+1. Some of the variables are insignificant, check vif for multicolinearity
 "
 
-
-
-
-
 vif(model_healthCareData)
-library(MASS)
-model_aic = stepAIC(model_healthCareData, direction = "both",trace=TRUE)
-summary(model_aic)
-vif(model_aic)
+"
+Observations:-
+1. Many of the IV's show multicolierity.
+2. We can try out PCA to remove multicolierity.
+"
 
+train_data_Imputed_with_Stand_x = train_data_Imputed_with_Stand[, !names(train_data_Imputed_with_Stand) %in% c("Target")]
+train_data_Imputed_with_Stand_Y = train_data_Imputed_with_Stand['Target']
+pca_scaled = prcomp(train_data_Imputed_with_Stand_x, center = TRUE,scale. = TRUE)
+summary(pca_scaled)
+"
+Observation:-
+1. First 12 PC, explains the ~97% variance, so we will select first 12 & do our model building.
+"
+
+train_data_Imputed_with_Stand_x_pca = as.data.frame(predict(pca_scaled, train_data_Imputed_with_Stand_x))
+train_data_Imputed_with_Stand_x_pca_imp = train_data_Imputed_with_Stand_x_pca[,1:12]
+head(train_data_Imputed_with_Stand_x_pca_imp)
+
+# Merge back Target
+train_data_Imputed_with_Stand_pca_imp = cbind(train_data_Imputed_with_Stand_x_pca_imp, train_data_Imputed_with_Stand_Y)
+
+
+model_healthCareData_pca = glm(formula = Target ~ ., data = (train_data_Imputed_with_Stand_pca_imp), family = binomial)
+summary(model_healthCareData_pca)
+vif(model_healthCareData_pca)
+"
+Observations:-
+1. All the variables are significant.
+"
 
 
 
 #Decide on the threshold, sensitivity - specificity graph
 library(Epi)
-ROC( form = Target ~ . , plot="sp" , data = train_data_Imputed_with_Stand)
+ROC( form = Target ~ . , plot="sp" , data = train_data_Imputed_with_Stand_pca_imp)
 "
 Observation:-
 1. 0.38 or less looks to be the threshold based on sensitivity - specificity - cutoff graph
@@ -267,9 +335,9 @@ Observation:-
 
 
 #Predict on training set
-target_pred = predict(model_healthCareData,type=c("response"))
+target_pred = predict(model_healthCareData_pca,train_data_Imputed_with_Stand_pca_imp,type=c("response"))
 train_data_Imputed_with_Stand$target_pred=target_pred
-target_pred_round_num = ifelse(target_pred > 0.3, 1, 0)
+target_pred_round_num = ifelse(target_pred > 0.38, 1, 0)
 #convert this to factor datatype
 train_data_Imputed_with_Stand$target_pred_round=as.factor(target_pred_round_num)
 head(train_data_Imputed_with_Stand)
@@ -278,17 +346,18 @@ head(train_data_Imputed_with_Stand)
 library(pROC)
 g <- roc(Target ~ target_pred_round_num, data = train_data_Imputed_with_Stand)
 plot(g) 
-auc(g)
+pROC::auc(g)
+
 "
 Observation:-
-1. AUC of 77.29 %, signifies the model is not bad.
+1. AUC of 80 %, signifies the model is not bad.
 "
 
 
 confusionMatrix(train_data_Imputed_with_Stand$target_pred_round, train_data_Imputed_with_Stand$Target, positive = "1")
 "
 Observation:-
-1. Sensitivity / Recall = 92.33 % . As we are looking for high Recall .3 threshold looks good.
+1. Sensitivity / Recall = 84.30 % . As we are looking for high Recall .3 threshold looks good.
 2. 1 : Disease, 0 : Not Disease
 "
 
@@ -301,51 +370,6 @@ Observation:-
 
 
 
-
-
-
-####### Test on validation_data  ###############
-head(validation_data)
-str(validation_data)
-summary(validation_data)
-
-
-
-#Impute Validation set data with imputedValues
-for(i in names(validation_data)){
-  validation_data[is.na(validation_data[,i]), i] = as.numeric(imputedValues[i])
-}
-
-
-head(validation_data)
-str(validation_data)
-summary(validation_data)
-
-#Standardise the data
-validation_data_Imputed_stand = predict(object = std_model,newdata = validation_data[, !names(validation_data) %in% c("Target")])
-validation_data_Imputed_stand
-validation_data_Imputed_with_Stand = cbind(validation_data_Imputed_stand, validation_data["Target"])
-head(validation_data_Imputed_with_Stand)
-
-
-#Predict on validation set
-target_valid_pred = predict(model_healthCareData,validation_data_Imputed_with_Stand,type=c("response"))
-validation_data_Imputed_with_Stand$target_valid_pred=target_valid_pred
-target_valid_pred_round_num = ifelse(target_valid_pred > 0.3, 1, 0)
-#convert this to factor datatype
-validation_data_Imputed_with_Stand$target_valid_pred_round_num=as.factor(target_valid_pred_round_num)
-head(validation_data_Imputed_with_Stand)
-
-confusionMatrix(validation_data_Imputed_with_Stand$target_valid_pred_round_num, validation_data_Imputed_with_Stand$Target, positive = "1")
-
-
-"
-Observation:-
-1. Recall of 92.09% on validation data.
-"
-
-
-
 ########## Rough #################
 library(car)
 vif(model_healthCareData)
@@ -355,7 +379,20 @@ library(glmnet)
 glmnet(train_data_Imputed_with_Stand,train_data_Imputed_with_Stand$Target, family = "binomial")
 
 
-model_healthCareData = glm(formula = Target ~ A2.10 + A2.11 + A2.12 + A2.13 + A2.14 + A2.15 + A2.16 + A2.17 + 
-                             A2.2 + A2.20 + A2.22 + A2.26 + A2.28 + A2.3 + A2.30 + A2.4 + A2.5 + A2.52 + A2.6 + 
-                             A2.7 + A2.8 + A2.9 + A17.1 + A19.1 + A2.0.1 + IV + A1 + A3 + A4 + A5 + A6 + A7 + A8 + 
-                             A9 + A10 + A12 + A14 + A15 + A16 + A21 + A2.18, data = (train_data_Imputed_with_Stand), family = binomial)
+model_healthCareData = glm(formula = Target ~ A17.1+A19.1+A20.1+IV+A1+A2+A3+A4+A5+A6+A7+A8+A9+A10+A12+A14+A15+A16+A21, 
+                           data = (train_data_Imputed_with_Stand), family = binomial)
+
+
+
+vif(model_healthCareData)
+library(MASS)
+model_aic = stepAIC(model_healthCareData, direction = "both",trace=TRUE)
+summary(model_aic)
+vif(model_aic)
+
+
+
+cor(train_data_Imputed_with_Stand[,1:19])
+library("dplyr")
+select_if(train_data_Imputed_with_Stand_pca_imp, is.numeric)
+corrplot(cor(train_data_Imputed_with_Stand[,1:19], use = "complete.obs"), method = "number")

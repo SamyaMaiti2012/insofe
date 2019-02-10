@@ -1,6 +1,8 @@
 library(DMwR)
 
 rm(list=ls(all=TRUE))
+options(warn=1)
+
 
 getwd()
 setwd("/Users/samyam/Documents/Samya/Insofe/insofe/CSE7302c_ProblemDescription_and_Dataset")
@@ -99,7 +101,7 @@ head(healthCaseDataWithoutDisCol)
 
 
 # Define continuous & Categorical Columns
-continuousColumn = c('IV', 'A1', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A12', 'A14', 'A15', 'A16', 'A21')
+continuousColumn = c('IV', 'A1','A2','A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A12', 'A14', 'A15', 'A16', 'A21')
 continuousColumn
 catColumn = setdiff(names(healthCaseDataWithoutDisCol), continuousColumn)
 catColumn
@@ -157,8 +159,9 @@ summary(healthCaseDataFiltered)
 head(healthCaseDataFiltered)
 
 
+
 # Dummyfication before Splitting to ensure we dont encounter scenario of unseen data for both test & train.
-library(caret)
+
 healthCaseDataFilteredDummyFyModel = dummyVars(Target ~ ., data = healthCaseDataFiltered,fullRank = T)
 healthCaseDataFilteredDummyfy = data.frame(predict(healthCaseDataFilteredDummyFyModel, newdata = healthCaseDataFiltered))
 
@@ -168,6 +171,7 @@ head(healthCaseDataFilteredDummyfy)
 dim(healthCaseDataFilteredDummyfy)
 
 healthCaseDataFilteredDummyfy_1 = cbind(healthCaseDataFilteredDummyfy, healthCaseDataFiltered$Target)
+#Rename to Target
 names(healthCaseDataFilteredDummyfy_1)[names(healthCaseDataFilteredDummyfy_1) == 'healthCaseDataFiltered$Target'] = 'Target'
 str(healthCaseDataFilteredDummyfy_1)
 summary(healthCaseDataFilteredDummyfy_1)
@@ -239,27 +243,66 @@ head(train_data_Imputed_with_Stand)
 model_healthCareData = glm(formula = Target ~ ., data = (train_data_Imputed_with_Stand), family = binomial)
 #http://r.789695.n4.nabble.com/glm-fit-quot-fitted-probabilities-numerically-0-or-1-occurred-quot-td849242.html
 summary(model_healthCareData)
+
+
 "
 Observations:-
-1. Some of the variables are insignificant
+1. Some of the variables are insignificant, check vif for multicolinearity
+"
+
+vif(model_healthCareData)
+"
+Observations:-
+1. Many of the IV's show multicolierity.
+2. We can try out PCA to remove multicolierity.
+3. We can also use step AIC, without doing PCA hoping the significant indipendent variables will be choosen.
+
+** We will try out option #3 first **
+
+
+"
+library(MASS)
+model_healthCareData_aic = stepAIC(model_healthCareData, direction = "both",trace=TRUE)
+summary(model_healthCareData_aic)
+vif(model_healthCareData_aic)
+
+
+"
+Observations:-
+1. We can see some of the insignificant variables has been removed, but still some of the IV's have high VIF.
+2. We will do PCA, followed by retraining & eveluation (VIF, StepAIC, Recall)
 "
 
 
+train_data_Imputed_with_Stand_x = train_data_Imputed_with_Stand[, !names(train_data_Imputed_with_Stand) %in% c("Target")]
+train_data_Imputed_with_Stand_Y = train_data_Imputed_with_Stand['Target']
+pca_scaled = prcomp(train_data_Imputed_with_Stand_x, center = TRUE,scale. = TRUE)
+summary(pca_scaled)
+"
+Observation:-
+1. First 12 PC, explains the ~97% variance, so we will select first 12 & do our model building.
+"
+
+train_data_Imputed_with_Stand_x_pca = as.data.frame(predict(pca_scaled, train_data_Imputed_with_Stand_x))
+train_data_Imputed_with_Stand_x_pca_imp = train_data_Imputed_with_Stand_x_pca[,1:12]
+head(train_data_Imputed_with_Stand_x_pca_imp)
+
+# Merge back Target
+train_data_Imputed_with_Stand_pca_imp = cbind(train_data_Imputed_with_Stand_x_pca_imp, train_data_Imputed_with_Stand_Y)
 
 
-
-vif(model_healthCareData)
-library(MASS)
-model_aic = stepAIC(model_healthCareData, direction = "both",trace=TRUE)
-summary(model_aic)
-vif(model_aic)
-
+model_healthCareData_pca = glm(formula = Target ~ ., data = (train_data_Imputed_with_Stand_pca_imp), family = binomial)
+summary(model_healthCareData_pca)
+"
+Observations:-
+1. All the variables are significant.
+"
 
 
 
 #Decide on the threshold, sensitivity - specificity graph
 library(Epi)
-ROC( form = Target ~ . , plot="sp" , data = train_data_Imputed_with_Stand)
+ROC( form = Target ~ . , plot="sp" , data = train_data_Imputed_with_Stand_pca_imp)
 "
 Observation:-
 1. 0.38 or less looks to be the threshold based on sensitivity - specificity - cutoff graph
@@ -267,7 +310,7 @@ Observation:-
 
 
 #Predict on training set
-target_pred = predict(model_healthCareData,type=c("response"))
+target_pred = predict(model_healthCareData_pca,train_data_Imputed_with_Stand_pca_imp,type=c("response"))
 train_data_Imputed_with_Stand$target_pred=target_pred
 target_pred_round_num = ifelse(target_pred > 0.3, 1, 0)
 #convert this to factor datatype
@@ -278,17 +321,18 @@ head(train_data_Imputed_with_Stand)
 library(pROC)
 g <- roc(Target ~ target_pred_round_num, data = train_data_Imputed_with_Stand)
 plot(g) 
-auc(g)
+pROC::auc(g)
+
 "
 Observation:-
-1. AUC of 77.29 %, signifies the model is not bad.
+1. AUC of 76.11 %, signifies the model is not bad.
 "
 
 
 confusionMatrix(train_data_Imputed_with_Stand$target_pred_round, train_data_Imputed_with_Stand$Target, positive = "1")
 "
 Observation:-
-1. Sensitivity / Recall = 92.33 % . As we are looking for high Recall .3 threshold looks good.
+1. Sensitivity / Recall = 93.42 % . As we are looking for high Recall .3 threshold looks good.
 2. 1 : Disease, 0 : Not Disease
 "
 
@@ -341,8 +385,11 @@ confusionMatrix(validation_data_Imputed_with_Stand$target_valid_pred_round_num, 
 
 "
 Observation:-
-1. Recall of 92.09% on validation data.
+1. Recall of 93.41% on validation data.
 "
+
+
+
 
 
 
@@ -359,3 +406,18 @@ model_healthCareData = glm(formula = Target ~ A2.10 + A2.11 + A2.12 + A2.13 + A2
                              A2.2 + A2.20 + A2.22 + A2.26 + A2.28 + A2.3 + A2.30 + A2.4 + A2.5 + A2.52 + A2.6 + 
                              A2.7 + A2.8 + A2.9 + A17.1 + A19.1 + A2.0.1 + IV + A1 + A3 + A4 + A5 + A6 + A7 + A8 + 
                              A9 + A10 + A12 + A14 + A15 + A16 + A21 + A2.18, data = (train_data_Imputed_with_Stand), family = binomial)
+
+
+
+vif(model_healthCareData)
+library(MASS)
+model_aic = stepAIC(model_healthCareData, direction = "both",trace=TRUE)
+summary(model_aic)
+vif(model_aic)
+
+
+
+cor(train_data_Imputed_with_Stand[,1:19])
+library("dplyr")
+select_if(train_data_Imputed_with_Stand_pca_imp, is.numeric)
+corrplot(cor(train_data_Imputed_with_Stand[,1:19], use = "complete.obs"), method = "number")

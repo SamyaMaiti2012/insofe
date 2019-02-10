@@ -1,11 +1,12 @@
 library(DMwR)
 
 rm(list=ls(all=TRUE))
+#options(warn=1)
 
 getwd()
 setwd("/Users/samyam/Documents/Samya/Insofe/insofe/CSE7302c_ProblemDescription_and_Dataset")
 
-set.seed(41)
+set.seed(404)
 
 
 ######### EDA ##########
@@ -99,7 +100,7 @@ head(healthCaseDataWithoutDisCol)
 
 
 # Define continuous & Categorical Columns
-continuousColumn = c('IV', 'A1', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A12', 'A14', 'A15', 'A16', 'A21')
+continuousColumn = c('IV', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A12', 'A14', 'A15', 'A16', 'A21')
 continuousColumn
 catColumn = setdiff(names(healthCaseDataWithoutDisCol), continuousColumn)
 catColumn
@@ -193,6 +194,7 @@ str(train_data)
 
 
 
+
 # Pre-Processing of training data
 head(train_data)
 
@@ -218,8 +220,6 @@ length(imputedValues)
 imputedValues
 
 
-
-
 #Standardize the Continuous variables for quick convergence
 library(caret)
 std_model = preProcess(train_data_Imputed[, !names(train_data_Imputed) %in% c("Target")], method = c("center", "scale"))
@@ -241,54 +241,89 @@ model_healthCareData = glm(formula = Target ~ ., data = (train_data_Imputed_with
 summary(model_healthCareData)
 "
 Observations:-
-1. Some of the variables are insignificant
+1. Some of the variables are insignificant, check vif for multicolinearity
 "
 
 
-
-
-
+library(car)
 vif(model_healthCareData)
+
+"
+Observations:-
+1. Many of the IV's show multicolierity.
+2. Drop the highly colinear attributes
+"
+
+model_healthCareData_1 = glm(formula = Target ~ A17.1+A19.1+A20.1+IV+A1+A2+A3+A4+A14+A15+A21+A16+A12, data = (train_data_Imputed_with_Stand), 
+                             family = binomial,control = list(maxit = 500))
+vif(model_healthCareData_1)
 library(MASS)
-model_aic = stepAIC(model_healthCareData, direction = "both",trace=TRUE)
-summary(model_aic)
-vif(model_aic)
+model_aic_1 = stepAIC(model_healthCareData_1, direction = "both",trace=TRUE)
+summary(model_aic_1)
+vif(model_aic_1)
+"
+Observations:-
+1. A15 is not significant & also multicolinear. Some removing it. 
+"
+model_healthCareData_2 = glm(formula = Target ~ A17.1+A19.1+A20.1+IV+A1+A2+A3+A4+A14+A15+A12, data = (train_data_Imputed_with_Stand), family = binomial)
+vif(model_healthCareData_2)
+library(MASS)
+model_aic_2 = stepAIC(model_healthCareData_2, direction = "both",trace=TRUE)
+summary(model_aic_2)
+vif(model_aic_2)
+
+#Remove A12
+#model_healthCareData_3 = glm(formula = Target ~ A17.1+A19.1+A20.1+IV+A1+A2+A3+A4+A14+A15, data = (train_data_Imputed_with_Stand), family = binomial)
+#vif(model_healthCareData_3)
 
 
+
+"
+Observations:-
+1. All the variables are significant.
+"
+
+
+train_data_Imputed_with_Stand_imp = train_data_Imputed_with_Stand[c('A17.1','A19.1','A20.1','IV','A1','A2','A3','A4','A14','A15','A12','Target')]
 
 
 #Decide on the threshold, sensitivity - specificity graph
 library(Epi)
-ROC( form = Target ~ . , plot="sp" , data = train_data_Imputed_with_Stand)
+ROC( form = Target ~ . , plot="sp" , data = train_data_Imputed_with_Stand_imp)
 "
 Observation:-
-1. 0.38 or less looks to be the threshold based on sensitivity - specificity - cutoff graph
+1. 0.4 or less looks to be the threshold based on sensitivity - specificity - cutoff graph
 "
 
 
 #Predict on training set
-target_pred = predict(model_healthCareData,type=c("response"))
-train_data_Imputed_with_Stand$target_pred=target_pred
-target_pred_round_num = ifelse(target_pred > 0.3, 1, 0)
+target_pred = predict(model_aic_2,type=c("response"))
+
+#ROC & AUC
+library(ROCR)
+ROCRpred = prediction(target_pred, train_data_Imputed_with_Stand_imp$Target)
+as.numeric(performance(ROCRpred, "auc")@y.values)
+ROCRperf <- performance(ROCRpred, "tpr", "fpr")
+par(mfrow=c(1,1))
+plot(ROCRperf, colorize = TRUE, print.cutoffs.at=seq(0,1,by=0.025), text.adj=c(-0.2,1.7))
+"
+Observation:-
+1. AUC : 0.8644543
+2. Threshold : 0.35
+"
+
+train_data_Imputed_with_Stand_imp$target_pred=target_pred
+target_pred_round_num = ifelse(target_pred > 0.35, 1, 0)
 #convert this to factor datatype
-train_data_Imputed_with_Stand$target_pred_round=as.factor(target_pred_round_num)
-head(train_data_Imputed_with_Stand)
+train_data_Imputed_with_Stand_imp$target_pred_round=as.factor(target_pred_round_num)
+head(train_data_Imputed_with_Stand_imp)
 
 
-library(pROC)
-g <- roc(Target ~ target_pred_round_num, data = train_data_Imputed_with_Stand)
-plot(g) 
-auc(g)
+
+confusionMatrix(train_data_Imputed_with_Stand_imp$target_pred_round, train_data_Imputed_with_Stand_imp$Target, positive = "1")
 "
 Observation:-
-1. AUC of 77.29 %, signifies the model is not bad.
-"
-
-
-confusionMatrix(train_data_Imputed_with_Stand$target_pred_round, train_data_Imputed_with_Stand$Target, positive = "1")
-"
-Observation:-
-1. Sensitivity / Recall = 92.33 % . As we are looking for high Recall .3 threshold looks good.
+1. Sensitivity / Recall = 89 % . As we are looking for high Recall .35 threshold looks good.
 2. 1 : Disease, 0 : Not Disease
 "
 
@@ -328,34 +363,20 @@ validation_data_Imputed_with_Stand = cbind(validation_data_Imputed_stand, valida
 head(validation_data_Imputed_with_Stand)
 
 
-#Predict on validation set
-target_valid_pred = predict(model_healthCareData,validation_data_Imputed_with_Stand,type=c("response"))
-validation_data_Imputed_with_Stand$target_valid_pred=target_valid_pred
-target_valid_pred_round_num = ifelse(target_valid_pred > 0.3, 1, 0)
-#convert this to factor datatype
-validation_data_Imputed_with_Stand$target_valid_pred_round_num=as.factor(target_valid_pred_round_num)
-head(validation_data_Imputed_with_Stand)
+validation_data_Imputed_with_Stand_imp = validation_data_Imputed_with_Stand[c('A17.1','A19.1','A20.1','IV','A1','A2','A3','A4','A14','A15','A12','Target')]
 
-confusionMatrix(validation_data_Imputed_with_Stand$target_valid_pred_round_num, validation_data_Imputed_with_Stand$Target, positive = "1")
+#Predict on validation set
+target_valid_pred = predict(model_aic_2,validation_data_Imputed_with_Stand_imp,type=c("response"))
+validation_data_Imputed_with_Stand_imp$target_valid_pred=target_valid_pred
+target_valid_pred_round_num = ifelse(target_valid_pred > 0.35, 1, 0)
+#convert this to factor datatype
+validation_data_Imputed_with_Stand_imp$target_valid_pred_round_num=as.factor(target_valid_pred_round_num)
+head(validation_data_Imputed_with_Stand_imp)
+
+confusionMatrix(validation_data_Imputed_with_Stand_imp$target_valid_pred_round_num, validation_data_Imputed_with_Stand_imp$Target, positive = "1")
 
 
 "
 Observation:-
-1. Recall of 92.09% on validation data.
+1. Recall of 89.10% on validation data.
 "
-
-
-
-########## Rough #################
-library(car)
-vif(model_healthCareData)
-alias(model_healthCareData)
-
-library(glmnet)
-glmnet(train_data_Imputed_with_Stand,train_data_Imputed_with_Stand$Target, family = "binomial")
-
-
-model_healthCareData = glm(formula = Target ~ A2.10 + A2.11 + A2.12 + A2.13 + A2.14 + A2.15 + A2.16 + A2.17 + 
-                             A2.2 + A2.20 + A2.22 + A2.26 + A2.28 + A2.3 + A2.30 + A2.4 + A2.5 + A2.52 + A2.6 + 
-                             A2.7 + A2.8 + A2.9 + A17.1 + A19.1 + A2.0.1 + IV + A1 + A3 + A4 + A5 + A6 + A7 + A8 + 
-                             A9 + A10 + A12 + A14 + A15 + A16 + A21 + A2.18, data = (train_data_Imputed_with_Stand), family = binomial)
