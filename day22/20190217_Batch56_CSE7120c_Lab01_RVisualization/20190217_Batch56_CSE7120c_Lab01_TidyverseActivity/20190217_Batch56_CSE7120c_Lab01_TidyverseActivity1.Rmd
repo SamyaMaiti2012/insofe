@@ -1,0 +1,91 @@
+---
+title: "Tidyverse LabActivity1"
+author: "Insofe Lab"
+date: "17th Feb 2019"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r}
+# Removing the global environment variables
+rm(list = ls(all = TRUE))
+```
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+# Setting the working directory
+# Set your Own Working directory Here if the Dataset & the ".Rmd" file are in different paths
+# setwd("")
+```
+# tidyr package
+## separate() method: It splits single column to multiple columns
+```{r}
+"inc5000_2017.csv" %>% 
+  read.csv() %>%
+    separate(founded, c("date", "month", "year_founded"), sep="/", remove = TRUE) -> inc5000_2017_data 
+head(inc5000_2017_data)  
+```
+## unite() method: It combines multiple columns to a single column
+```{r}
+inc5000_2017_data %>%
+  unite(founded, c(date,month,year_founded), sep= "/", remove = TRUE) -> inc5000_2017_data2
+head(inc5000_2017_data2)
+```
+
+## spread() method: Used for converting data from long format to wide format
+```{r}
+"marklist_long.csv" %>% 
+  read.csv() %>%
+    spread(key= Subject, value = Marks) -> wide_data
+
+print(wide_data)
+```
+
+## gather() method: Used for converting data from wide format to long format
+```{r}
+"marklist_wide.csv" %>%  
+  read.csv() %>% 
+    gather(Subject, Marks, c(English,Maths,Science)) -> long_data
+print(long_data)
+```
+
+# dplyr package
+## select() method: To pick specific columns
+```{r}
+"marklist_long.csv" %>%  
+read_csv() %>% 
+select(Name,Subject)  
+```
+## filter() method: To filter specific rows based on some condition
+```{r}
+"marklist_long.csv" %>%  
+read_csv() %>% 
+filter(Name == "Ram")
+```
+## arrange() method: To sort the rows
+```{r}
+"marklist_long.csv" %>%  
+read_csv() %>% 
+arrange(desc(Marks))
+```
+## mutate() method: To create new variables that are functions of existing variables
+```{r}
+"marklist_long.csv" %>%  
+read_csv() %>% 
+mutate(grade= factor((Marks >= 80), labels = c("Passed", "Excellence")))
+```
+## summarize() and group_by() methods: To group the columns and summarize the results
+```{r}
+"marklist_long.csv" %>%  
+read_csv() %>% 
+group_by(Name) %>%
+summarize(TotalMarks = sum(Marks))
+```
+
+
+
+

@@ -1,0 +1,209 @@
+---
+title: "Analysis & Workflow Arrangement"
+output: html_document
+---
+
+# Field Work {.tabset}
+
+## Objective
+
+```{r}
+print("Client provides the requirement as well as the Objective")
+```
+
+## Domain Understanding 
+
+```{r}
+print("Do the Domain Understanding before even starting the Data Analysis")
+```
+
+## Architecting
+
+```{r}
+print("Architecting the Solution Work Flow i.e What needs to be done for achieving the goal")
+```
+
+## Evaluation Metric
+
+```{r}
+print("What is my my Evaluation Metric, with which i can evaluate my Modelling & Predictions")
+```
+
+# Exploratory Data Analysis (EDA) {.tabset}
+
+## Str & Summ
+
+```{r}
+print("Understanding the Structure & Summary of the given Data")
+```
+
+## NA's
+
+```{r}
+print("Identifying the Missing values in the Dataset")
+```
+
+## Other Data Pre-Processing Techniques
+
+```{r}
+print("Identifying the Missing values in the Dataset")
+```
+
+## Visualization
+
+```{r}
+# print("Visualizing the Data to extract insights from it")
+```
+
+### Various Sections in the Visualization {.tabset}
+
+#### Uni-variate Plots
+
+```{r}
+print("Generate your Uni-variate Plots here")
+```
+
+#### Bi-variate Plots
+
+```{r}
+print("Generate your Bi-variate Plots here")
+```
+
+#### Multi-variate Plots
+
+```{r}
+print("Generate your Multi-variate Plots here")
+```
+
+# Data_Modelling
+
+## Basic Models
+
+```{r}
+print("Build your basic model to set a threshold - To build models that should be better than this")
+```
+
+## Feature Importance
+
+```{r}
+print("Identifying the Feature importance using various Feature Techniques - Step-AIC/VIF/RF")
+```
+
+## Advance Models {.tabset}
+
+```{r}
+print("Generate your Multi-variate Plots here")
+```
+
+### Decision Trees
+
+```{r}
+print("Build your Decision Tree Algo")
+```
+
+### Naive Bayes 
+
+```{r}
+print("Build your Naive Bayes Algo")
+```
+
+### K-Nearest Neighbors
+
+```{r}
+print("Build your KNN Algo")
+```
+
+### Support Vector Machines
+
+```{r}
+print("Build your SVM Algo")
+```
+
+### Ensemble Learning {.tabset}
+
+```{r}
+# print("Build your Ensemble Models")
+```
+
+#### Bagging
+
+```{r}
+print("Bagging Model")
+```
+
+#### Boosting
+
+```{r}
+print("Boosting Model")
+```
+
+#### Stacking
+
+```{r}
+print("Stacking Model")
+```
+
+# Evaluation of various Models {.tabset}
+
+## Decision Trees Confusion Matrix
+
+```{r}
+print("Generate your Decision Tree Algo's Confusion Matrix")
+```
+
+## Naive Bayes Confusion Matrix
+
+```{r}
+print("Generate your Naive Bayes Algo's Confusion Matrix")
+```
+
+## K-Nearest Neighbors Confusion Matrix
+
+```{r}
+print("Generate your KNN Algo's Confusion Matrix")
+```
+
+## Support Vector Machines Confusion Matrix
+
+```{r}
+print("Generate your SVM Algo's Confusion Matrix")
+```
+
+## Ensemble Learning {.tabset}
+
+```{r}
+# print("Generate your Ensemble Models CM's")
+```
+
+### Bagging Confusion Matrix
+
+```{r}
+print("Generate your Bagging Model's Confusion Matrix")
+```
+
+### Boosting Confusion Matrix
+
+```{r}
+print("Generate your Boosting Model's Confusion Matrix")
+```
+
+### Stacking Confusion Matrix
+
+```{r}
+print("Generate your Stacking Model's Confusion Matrix")
+```
+
+# End-Point
+
+```{r}
+# if(results == satisfactory){
+#   print("Converge & Submit the results")
+# }
+# else{
+#   print("Re-Iterate over the same work flow by tweaking some more aspects of the work flow")
+# }
+```
+  
+
+# ----------------------- Adios ---------------------------
+

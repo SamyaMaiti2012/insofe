@@ -1,0 +1,13 @@
+This dataset provides fuel economy data from 1999 and 2008 for 38 popular models of cars. The dataset is shipped with ggplot2 package.,,,
+Variable,Type,Description,Details
+manufacturer,string,car manufacturer,15 manufacturers
+model,string,model name,38 models
+displ,numeric,engine displacement in liters,"1.6 - 7.0, median: 3.3"
+year,integer,year of manufacturing,"1999, 2008"
+cyl,,number of cylinders,"4, 5, 6, 8"
+trans,string,type of transmission,"automatic, manual (many sub types)"
+drv,string,drive type,"f, r, 4, f=front wheel, r=rear wheel, 4=4 wheel"
+cty,integer,city mileage,miles per gallon
+hwy,integer,highway mileage,miles per gallon
+fl,string,fuel type,"5 fuel types (diesel, petrol, electric, etc.)"
+class,string,vehicle class (types of car),"7 types (compact, SUV, minivan etc.)"
