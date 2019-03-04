@@ -1,0 +1,66 @@
+AttributeName,AttributeType,Details,Remarks
+id,id, patient identification number,
+age,numeric,age in years,
+gender,categorical, 1 = male; 0 = female,
+chestpainloc,categorical,chest pain location --1 = substernal; 0 = otherwise,
+painexertion,categorical,1 = provoked by exertion; 0 = otherwise,
+reliefbyrest,categorical, 1 = relieved after rest; 0 = otherwise,
+chestpaintype,categorical,chest pain type,-- Value 1: typical angina
+,,,-- Value 2: atypical angina
+,,,-- Value 3: non-anginal pain
+,,,-- Value 4: asymptomatic
+restingBP,numeric, resting blood pressure in mm Hg on admission to the hospital,
+serumcholesterol,numeric,serum cholestoral in mg/dl,
+IsSmoker,categorical,1 = yes; 0 = no is or is not a smoker,
+NumCigs,numeric,cigarettes per day,
+SmokingPeriod,numeric, number of years as a smoker,
+FastingBS,categorical,fasting blood sugar > 120 mg/dl 1 = true; 0 = false,
+FamHistory,categorical,famhist: family history of coronary artery disease 1 = yes; 0 = no,
+restingECGRes,categorical, restecg: resting electrocardiographic results,-- Value 0: normal
+,,,-- Value 1: having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of > 0.05 mV)
+,,,-- Value 2: showing probable or definite left ventricular hypertrophy by Estes' criteria
+ECGspecsDigitalis,categorical,digitalis used furing exercise ECG: 1 = yes; 0 = no,
+ECGspecsBetaBlocker,categorical, Beta blocker used during exercise ECG: 1 = yes; 0 = no,
+ECGspecsNitrates,categorical,nitrates used during exercise ECG: 1 = yes; 0 = no,
+ECGspecsCalci,categorical,calcium channel blocker used during exercise ECG: 1 = yes; 0 = no,
+ECGspecsdiuretic,categorical, diuretic used used during exercise ECG: 1 = yes; 0 = no,
+ExTestDuration,numeric, duration of exercise test in minutes,
+TimeSTNoted,numeric,time when ST measure depression was noted,
+Metabolism,numeric,mets achieved,
+MaxHR,numeric,maximum heart rate achieved,
+RestHRGen,numeric, resting heart rate,
+PeakExBP1,numeric, peak exercise blood pressure first of 2 parts,
+PeakExBP2,numeric, peak exercise blood pressure second of 2 parts,
+restingBPGen,numeric,resting blood pressure,
+ExInducedAngina,categorical,exercise induced angina 1 = yes; 0 = no,
+xhypo,categorical,1 = yes; 0 = no,
+Stdepression,numeric, ST depression induced by exercise relative to rest,
+Slope,categorical,the slope of the peak exercise ST segment,-- Value 1: upsloping
+,,,-- Value 2: flat
+,,,-- Value 3: downsloping
+HeightatRest,numeric, height at rest,
+heightatPeakEx,numeric,height at peak exercise,
+NumMajVessels,numeric,number of major vessels 0-3 colored by flourosopy,
+restRaidonuclid,numeric, rest raidonuclid sp? ejection fraction,
+restwallmotion,categorical, rest wall sp? motion abnormality,0 = none
+,,,1 = mild or moderate
+,,,2 = moderate or severe
+,,,3 = akinesis or dyskmem (sp?)
+exerRadinalid,numeric,exercise radinalid sp? ejection fraction,
+ExerWallmotion,categorical,exercise wall sp? motion,
+thalassemia,categorical,3 = normal; 6 = fixed defect; 7 = reversable defect,
+thalsev,numeric,thalassemia,
+thalpul,numeric,thalassemia,
+earlobe,numeric,earlobe,
+Severity,categorical,diagnosis of heart disease - 5 levels,"None , MildClass1, MildClass2, Moderate, Severe"
+LeftMaintrunk,categorical,Blood vessels of the heart,left main trunk
+ladproximation,categorical,Blood vessels of the heart, left anterior descending artery  proximation
+laddistance,categorical,Blood vessels of the heart, left anterior descending artery  distance
+cxmain,categorical,Blood vessels of the heart,
+ramus,categorical,Blood vessels of the heart,
+obtuseMarginal1,categorical,Blood vessels of the heart,
+obtuseMarginal2,categorical,Blood vessels of the heart,
+rcaproximation,categorical,Blood vessels of the heart,right coronary artery proximation
+rcadistance,categorical,Blood vessels of the heart,right coronary artery distance
+nameOfPatient,categorical,"last name of patient replaced this with the dummy string ""name"" also",
+Location,categorical,Location,
