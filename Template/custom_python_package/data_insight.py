@@ -81,6 +81,8 @@ def get_data_sample(dataF, num_sample=10):
 
 
 def get_monotonically_incleasing_attributes(dataF):
+    """
+    """
     for col in dataF.columns :
         if(dataF[col].is_monotonic) :
             print("Column :", col, ": is Monotonically increasing")
