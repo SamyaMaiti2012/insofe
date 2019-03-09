@@ -1,0 +1,21 @@
+-> Write ployly functions in sperate file
+-> custom transformers (user defined functions to be used in a pipeline)
+
+Integrate
+---------- 
+Jupyter Notebook 
+Dash
+Plotly
+Publish to own Website
+Tableau
+PPt
+Flask
+DJango
+
+
+
+-> Tableau can do the same thing as Plotly+ Dash+Dashboard
+
+-> Falcon - SQL client with Plotly
+
+-> Get own domain using Godaddy or wix
