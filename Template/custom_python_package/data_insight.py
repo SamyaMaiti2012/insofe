@@ -44,8 +44,15 @@ def set_seed(seed):
 
  
 
-def data_importer_csv(data_path, na_values=["NA"]):
+def data_importer_csv(data_path, na_values=[]):
     dataF = pd.read_csv(data_path, na_values=na_values)
+    print("The number of Rows in the Data set  = "+str(dataF.shape[0]))
+    print("The number of Columns in the data set = " +str(dataF.shape[1]))
+    return dataF
+
+
+def data_importer_xlsx(data_path, na_values=[]):
+    dataF = pd.read_excel(data_path, na_values=na_values)
     print("The number of Rows in the Data set  = "+str(dataF.shape[0]))
     print("The number of Columns in the data set = " +str(dataF.shape[1]))
     return dataF
