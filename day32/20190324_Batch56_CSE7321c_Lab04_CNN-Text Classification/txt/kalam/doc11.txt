@@ -1,0 +1,91 @@
+I am delighted to inaugurate the first IEEE International Symposium on Cost-Effective Museum Exhibits in Engineering and Applied Science at Hyderabad organized by B.M. Birla Science Centre in association with IEEE. My greetings to the organizers, participating educators in Engineering, computing, applied science and technology, Directors, Curators, Staff of science and technology museums, IEEE Volunteers and distinguished guests.
+
+
+It is indeed a unique collaboration in the field of scientific exhibits, particularly IEEE exhibits at BM Birla Science Centre, Hyderabad. The IEEE exhibits indeed provides fundamentals and applications of electrical and computer engineering, particularly intended for Pre-college students with an interactive style towards understanding science. I was impressed the way IEEE contributed through volunteer leadership of IEEE involving Triscience.org in cooperation with Newyork hall of science in developing and fielding 5 exhibits during 2010, and 8 additional exhibits in 2011 including e-scientia from the IEEE Uruguay Section. Another 2 exhibits have been created by Engineering evening college students and another 4 exhibits by high school students under the mentorship of IEEE Volunteers. Particularly, I was impressed with the Virtual Physics Lab, with 10 experiments developed by IIIT; Hyderabad supported by the Govt. of India and Media Lab Asia Project.
+
+
+My greetings to the B.M. Birla Science Centre, its management, Faculty, Researchers, Staff and the members of IEEE for introducing this innovative concept of cooperation. When I see all you, I am thinking what thoughts I can share with you. Let me discuss on the topic "Virtual Collaborative Network for Science Labs".
+
+Science museums as a medium of science communication
+
+The BM Birla Science Centre has been in the forefront to communicate with the citizens and students in particular the past, present and future of science. The multiple dimensions of science and technology are visible in the centre. Look at the twinkle, it produces to the student as it answers some doubts or ignites the creativity or radiates knowledge. Basic understanding answers curiosity and ignites creativity. It kindles urge for basic research and application of concepts to development of technology and applications. Students and teachers are benefited. People who are not taking the sustainability of our planet and our responsibility towards science and technology career, get opportunity to understand the power of technology in whatever field they are. For instance, a judicial person sees how e-judiciary can help him. A home-maker understands the science for cooking and home management. She is enriched to teach her kid in the primary. A teacher benefits in locating fast, a gifted student in science. We have to spread the message of such centres through the length and breadth of the country.
+
+Science communication profile
+
+Friends, I thought of sharing some experiences with all of you. So far, in ten years, I have met about 15 million youth below 20 years from various parts of India and abroad. Youth have their dreams, youth have their pain and above all youth have the immense power. I have come across thousands and thousands of questions. Most of the youth are concerned, about what type of India they are going to meet in a decade times. They have questions like "Will I have opportunity to study what I like?" But one thing I noticed, the youth of India?s are excited to know more about vision for the nation and the nation?s competitiveness in comparison to developed world. For building competitive India, we need to have more R&D based products and systems based on the fundamental science. Science is borderless, but technology has borders. The technology developed by any nation has its own Intellectual property value, which will not be available for the other nation. Hence, if a nation has to be competitive, it should build its scientific talent and there by nurture technological development leading to Global products and systems. Science communication through the proper understanding of the scientific theories and its related experiments at the school level is very vital.
+
+Experience of Mobile Science Labs in rural schools
+
+Let me share my personal experience with Viksit Bharat Foundation. The Viksit Bharat Foundation, Bihar Branch is successfully operating 3 Mobile Science Labs provided by Agastya International Foundation (AIF), Bangalore, in the districts of Dharbhanga, Madhubani and Supaul. The Mobile Science Labs has already reached about 40,000 students, 758 teachers and visited 160 middle and high schools. The Mobile Science Laboratory and the team of Science Instructors sent along with it, have become very popular among the school children in rural Bihar. The Mobile Science Lab visited schools in remote areas, drawing large attendance in schools. The students of class VII to class X were given instructions with practical lessons in science subjects and taught with the help of models and experiments which made learning exciting. The response from the students was overwhelming. Viksit Bharat Foundation is progressing to establish a full time mobile science laboratory in the rural areas of Bihar with the help of Bihar Government.
+
+Science Lab at Village
+
+On 18 Oct 2012, I visited Agastya International Foundation at Kuppam, Andhra Pradesh, where I inaugurated Guru Graha Astronomy Centre at the Agastya Campus at Kuppam. There, I witnessed the 4 centre of scientific excellence ? "Vision Works" where a number of mechanical systems, scientific instruments and Scientific experiments tools are designed; Next I have visited the Guru Graha Astronomy Center, where I witnessed the beautiful solar system simulator, where all the planets are orbiting around the sun on mono rail platform - a beautiful way of explaining the functioning of the Solar system; there I saw the experiment where it was scientifically explained how the Orbital Plane is working in reference to Sun, Earth and moon combination.
+
+
+Then I visited Jhunjunwala Discovery Centre, where I saw the working of Bhisma Chair, Sail boat functioning, hyperbolic slot, Floating Chain, Climbing Arc and many other innovative scientific models. Next I visited Art and Creative Centre and then I witnessed the i-mobile science laboratory where is taking the viewers to the window of virtual world of science laboratory where you can immerse and understand the world of science and its technological applications. What a beautiful science laboratories established by the Agastya foundation, which are kindling the scientific inquiries of the creative minds of the students. Agaystya Foundation and its team who are responsible for making this science museum, has been injecting the spirit of science among the rural students. I am confident that the museums such as Guru Graha Astronomy Centre will unravel the mysteries of the Universe and our Galaxy to the students. Agastya has reached 4 million students, 120000 teachers and 300000 community members. With 66 Mobile Science Labs and 30 Science Centers, Agastya has covered 45 districts and conducted 150 Science Fairs.
+
+Virtual Laboratories in India and abroad
+
+Throughout the world, we find unique science laboratories with unique science experiments are emanated. 
+
+Tryscience: As one of IEEE Science exhibits - TryScience.org ? which is a gateway to experience the excitement of contemporary science and technology through on and offline interactivity with science and technology centres worldwide. Science is exciting, and it?s for everyone. This helps to investigate, discover and try science for yourself. TryScience had a partnership with IBM Corporation, the New York Hall of Science (NYHOS), the Association of Science-Technology Centres (ASTC) and science centres worldwide to provide these virtual laboratory based science experiments worldwide through web.
+
+
+Virtual Labs - (www.vlab.co.in) - An Initiative of Ministry of Human Resource Development (MHRD), Under the National Mission on Education through ICT is to provide remote-access to Labs in various disciplines of Science and Engineering. These Virtual Labs would cater to students at the undergraduate level, post graduate level as well as to research scholars and also to enthuse students to conduct experiments by arousing their curiosity. This would help them in learning basic and advanced concepts through remote experimentation. Today most equipment has a computer interface for control and data storage. It is possible to design good experiments around some of this equipment which would enhance the learning of a student. Internet-based experimentation further permits use of resources - knowledge, software, and data available on the web, apart from encouraging skillful experiments being simultaneously performed at points separated in space (and possibly, time).
+
+
+ADA Virtual Prototype: One of the Laboratories involved in design and development of Light Combat Aircraft at ADA (Aeronautical Development Agency) has created a Virtual Reality Centre ? which builds the complete Virtual Prototype of Aircraft system from the 3D models generated, validated and analysed using CFD, CAE and Finite element analysis study and the final approved systems and subsystems are distributed to more than 400 work centres for manufacturing the various subsystems, assembly. The point which I would like to mention here is how the multiple design and R&D Centres are connected to build an Aircraft system using Virtual Laboratory environment in sharing the models, making appropriate modifications and approval through Product Data management environments.
+
+
+Like this, there are many virtual laboratories are being progressed to provide the total insight into the scientific theory and product development. BM Birla Science Centre can become a partner one of the national laboratory like ADA to build a virtual laboratory on aircraft system. 
+Now let me share with you my visualization on Science Laboratories. 
+
+My visualization on Science Laboratories
+
+Friends, I visualize, every science lab or graduated science museums, should be unique. One science lab can have an exhibit on what is God?s particle (Higgs Boson Particle), another laboratory may focus on having a unique virtual lab on how to build a rocket, or how to build a satellite or how build an aircraft? Another Laboratory in India, should show in real time, how a productivity of rice, wheat or vegetables can be increased more than 3 times based on latest agriculture technologies. There should be another science lab or museum, which exclusively presents the sustainable development system for rural development such as water, education, healthcare, employment generation can be presented in the form of village profile.
+
+
+Another unique science laboratory should focus and presents the challenges in bringing together as a Unified Field Theory, particularly integrating laws of Physics and its particles such as Newton's Gravitational Law, Einstein's theory of Relativity, Maxwell's equations towards classical electrodynamics, and string theory of space. 
+
+Another unique virtual lab should come in on recent CERN?s discovery on Higgs Boson particle, to present the way student can understand.
+
+
+Like this we need to establish unique Virtual labs in the country with collaboration and interaction built in so that students can understand the science behind it by simulating the real time experiments. Let me now discuss with you on how to establish Virtual Collaborative Network for Science Laboratory.
+
+Virtual Collaborative Network for Science Labs
+
+Let me share an important international programme of providing Tele-education, Tele-medicine and e-Governance services to 53 African nations from India. This programme is operational in 48 countries now with in an India?s commitment of technology and resource with the core competence of 53 African nations. The Pan African e-Network has been established through satellite communication, fibre optics communications and also through wireless communication. In which 5 universities from India, 5 universities from Africa, 12 Super Specialty Hospital from India and 5 Super Speciality Hospital from Africa provides education, healthcare and CME (Continuing Medical Services) to 53 African Nations. This provides various courses on science, engineering and humanities disciplines. This network is not only providing an e-learning, live learning opportunity but capable of providing an interactive and collaborative Virtual Laboratory experiments during their course of study.
+
+
+Based on the working model of Pan African e-Network, I suggest the BM. Birla Science Museum and IEEE to study the Pan African e-Network and establish a Virtual Collaborative Network for Science Labs. So that it is not only a web based access through audio, video and a 3D model of a lab, but an interactive, collaborative and a simulated real time virtual Laboratories which can act like a real experiments so that students across India and world can interact and experience the results of the experiments in working directly with that virtual laboratories.
+
+
+This Virtual Collaborative Network for Science Labs can used to connect many schools to provide Virtual Lab experiments by connecting many working Virtual laboratories in the world and also working laboratories in India such as DRDO, ISRO, DAE, CSIR laboratories. These organisations may create number of Virtual Laboratories related to their fundamental science area in their respective field of research. This will help to connect the national laboratories, museums and schools so that millions of students can benefit in understanding the scientific experiments at their schools itself.
+
+Conclusion
+
+Friends, the future challenges of science communication have several dimensions. The value of science has to be propagated to people at large and they should be made to realize the role played by science in their day to day life. Youngsters should be motivated to enquire into science. The innate fear that "science is a difficult subject" should be removed from the minds of the children through easy to understand, interactive, creative presentations by the science communicators. For this to happen, we need to establish science museums and laboratories across the country, so that it reaches to the students at the primary and secondary level education, so that the spirit of learning science and applying science with creative minds are possible, which will lead to building a borderless world with the spirit of scientific excellence.
+
+
+Certainly the efforts of B.M. Birla Science Centre in association with IEEE Hyderabad Chapter will become a cradle for the birth of many science museums across the country, particularly in rural areas. With these words, I inaugurate the first IEEE International of Symposium on Cost-effective Museum Exhibits in Engineering & Applied Science Hyderabad. 
+
+My best wishes to all the participants for success in their mission of meeting the challenges of applying science by understanding science for building a better and prosperous world of tomorrow. 
+
+Oath for the Students
+
+1.	Science is a life time mission. I will work, work and work and succeed.
+
+2.	Wherever I am, a thought will always come to my mind. That is what process or product I can innovate, invent or discover.
+
+3.	I will always remember that "Let not my winged days, be spent in vain". 
+
+4.	I realize I have to set a great scientific goal that will lead me to think high, work and persevere to realize the goal. 
+
+5.	My greatest friends will be great scientific minds, good teachers and good books and laboratories. 
+
+6.	I firmly believe that no problem can defeat me; I will become the captain of the problem, defeat the problem and succeed. 
+
+7.	I will work and work for removing the problems faced by planet earth in the areas of water, energy, habitat, waste management and environment through the application of science. 
+
+8.	 My National Flag flies in my heart and I will bring glory to my nation
