@@ -1,0 +1,4 @@
+"A fat cat sat on the mat"
+"Hello lets learn Mapreduce"
+"A fat cat sat on the mat"
+"Hello lets learn something interesting"

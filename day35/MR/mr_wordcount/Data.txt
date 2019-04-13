@@ -1,0 +1,44 @@
+International School of Engineering
+From Wikipedia, the free encyclopedia
+Jump to navigationJump to search
+International School Of Engineering
+International School of Engineering Logo.png
+Established	2011
+President	Dakshinamurthy V. Kolluru
+Location	Hyderabad, Telangana, India
+17.4148Â°N 78.4017Â°ECoordinates: 17.4148Â°N 78.4017Â°E
+Website	www.insofe.edu.in
+International School of Engineering (INSOFE) is an Applied Engineering school with area of focus in Data science/Big data analytics. It is located in Hyderabad in the state of Telangana, India, and Bengaluru in the state of Karnataka. It opened in 2011. The program is delivered through classroom only sessions and is suitable for students and working professionals.
+
+
+Contents
+1	History
+2	Program
+3	Rankings
+4	Collaborations
+5	Placement Services
+6	Scholarships & Internships
+7	Education Loan
+8	References
+History
+Dr. Dakshinamurthy V Kolluru, Dr. Sridhar Pappu and A S L Ganapathi Kumar started the institution in Hyderabad in mid-2011 and expanded to Bengaluru in early-2016. Initially the school functioned under mentorship of Dr. Dakshinamurthy, Dr. Sridhar and Dr. Sreerama Murthy. They are now supported by a team of additional mentors and in-house data scientists.
+
+The first cohort commenced in mid-2011 with 12 students. INSOFE has since trained over 2000 students from across the globe. In 2012, INSOFE also started corporate training services. It extended operations to Bengaluru in 2016.
+
+Program
+Within the field of Applied Engineering, INSOFE's primary focus is on Big data Analytics / Data science, training students in both the engineering and the business aspects of analytics.[1] The quality of content, pedagogy and assessment of INSOFE's CPEE Program is certified by the Language Technologies Institute (LTI) at Carnegie Mellon University (CMU).
+
+Rankings
+CIO.com listed INSOFE 3rd in their list of "16 Big Data Certifications That Will Pay Off" consecutively from 2013-2016.[2] Silicon India Magazine listed INSOFE in their list of "Top 5 Big Data Training Institutes 2016".[3] Analytics India Magazine, listed INSOFE in "Top 9 Analytics Training Institutes in India in 2016".[4] KDnuggets mentioned INSOFE in their list of Certificates in Analytics, Data Mining, and Data Science in 2014.[5]
+
+Collaborations
+In the academic segment, Language Technologies Institute of Carnegie Mellon University, USA has certified INSOFEs Big Data analytics and optimization program for the quality of Content, Pedagogy and Assessment. INSOFEs institute-industry collaboration is with Soothsayer Analytics (Detroit, Michigan based A.I. consulting company) to help build a center of excellence in data science. Together they delivered projects for Abercrombie & Fitch, Worthington Steels, Preferred Meals, Dunn & Bradstreet etc. In collaboration with iCube, INSOFE developed INTUCEO, an analytics business user interface.
+
+Placement Services
+INSOFE has an in-house placements department which organizes recruitment drives and assists students with campus placement services.
+
+Scholarships & Internships
+Students are eligible for scholarship based on their performance in the entrance test and during the program. INSOFE students can work on internship projects both paid and unpaid, and work on product, R & D and consulting based projects.
+
+Education Loan
+HDFC Credila bank and INSOFE have an MoU based on which INSOFE students can avail education loan from the bank upon meeting the banks eligibility criteria.
