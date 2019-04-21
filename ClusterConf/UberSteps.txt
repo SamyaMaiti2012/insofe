@@ -1,0 +1,228 @@
+## Steps for running the Uber Application
+
+1. Bring the Historical Data using the Flume command
+   flume-ng agent --conf <configuration_Directory_Path>  -f <properties_filename> -Dflume.root.logger=ERROR,console -n <Agent_name>
+   flume-ng agent --conf ./conf/ -f conf/flumeconf.properties -Dflume.root.logger=DEBUG, console -n uberAgent
+   
+2. Check the data in the hdfs folder 
+   hdfs dfs -ls /user/<user_id>/Uber/Hist
+   
+3. Using Pyspark do the manipulation on the dat
+            		#1.Create the spark Environment
+			
+            		from pyspark import SparkConf, SparkContext
+  			#2.Start the Spark context
+			conf = SparkConf().setAppName("Uber").setMaster('local[*]')
+			#sc = SparkContext(conf=conf)
+
+			#3. Login to PySpark shell using pyspark
+			sc.setLogLevel("Error")
+
+			#4. Create RDD for the Historical Data available in HDFS
+			uber_data = sc.textFile('/user/<user_id>/Uber/HistData/')
+
+			#5. Verify the first record from the above RDD 
+			uber_data.first()
+
+			#6. Create a new RDD with the name uber_fea_data with each field separated by "," 
+			# Use the transformation "map" and apply a lambda function split on ","
+			uber_fea_data = uber_data.map(lambda line : line.split(','))
+
+			#7. Verify first record
+			uber_fea_data.first()
+
+			#8. Verify first few records
+			uber_fea_data.take(2)
+
+			#9. Verify the type of RDD
+			type(uber_fea_data)
+
+			#10. Take a sample of 2% from the above data and write this sample as CSV file into Local file system or HDFS
+			#Take a sample of 2% from the above data into RDD sampleUberData
+			sampleUberData = uber_fea_data.sample(False, .02, 12345)
+
+			#11. Write a function (toCSVLine) which parses above RDD as CSV data.
+			def toCSVLine(data):
+				return ','.join(str(d) for d in data)
+
+			#12. Create a new RDD lines, by applying a map transformation and the function toCSVLine on each line.
+			lines = sampleUberData.map(toCSVLine)
+
+			#13. Write the above RDD lines as text file
+			lines.coalesce(1).saveAsTextFile('file:///home/<user_id>/Uber/SampleData')
+			
+4. Bring the data to the local file System and run the following commands
+
+
+			## necessary imports
+			import pandas as pd
+			import numpy as np
+			import scipy as sp
+			from sklearn.cluster import KMeans
+			get_ipython().magic(u'matplotlib inline')
+			import matplotlib.pyplot as plt
+			import seaborn as sns; sns.set()
+
+			## Create a dataframe for the CSV data 
+			sampleData = pd.read_csv("<CSV Data Path>/part-00000",  names = ['date', 'longitude', 'latitude', 'baseLLC'])
+
+			## Verify above dataframe
+			sampleData.head()
+
+			## Extract only longitude and latitude from the data
+			columns = ['longitude', 'latitude']
+			featuresData = pd.DataFrame(sampleData, columns=columns)
+
+			## Verify above dataframe
+			featuresData.head()
+
+			## Verify features datatype
+			featuresData['longitude'].dtype
+			featuresData['latitude'].dtype
+
+			### For the purposes of this example, we store feature data from our
+			### dataframe `featuresData`, in the `f1` and `f2` arrays. We combine this into
+			### a feature matrix `X` before entering it into the algorithm.
+			f1 = featuresData['longitude'].values
+			f2 = featuresData['latitude'].values
+			X=np.matrix(zip(f1,f2))
+
+			## Display X
+			X
+
+			## Draw a scatter plot with above features
+			plt.scatter(f1,f2)
+			plt.show()
+
+			## Build K Means with the 2 clusters
+			kmeans = KMeans(n_clusters=2).fit(X)
+
+			## Derive Centroids
+			centroids = kmeans.cluster_centers_
+
+			## Derive Labels
+			labels = kmeans.labels_
+
+			## Print Centroids
+			print(centroids)
+
+			## Print Labels
+			print(labels)
+
+			## Experiment/Build K means for different K values, from 1 to 20
+			K = range(1,20)
+			KM = [KMeans(n_clusters=k).fit(X) for k in K]
+			centroids = [k.cluster_centers_ for k in KM]
+
+			## Find with in sum of squared error
+			from scipy.spatial.distance import cdist, pdist
+
+			D_k = [cdist(X[:10000], cent, 'euclidean') for cent in centroids]
+			cIdx = [np.argmin(D,axis=1) for D in D_k]
+			dist = [np.min(D,axis=1) for D in D_k]
+			sumWithinSS = [sum(d) for d in dist]
+
+			## Elbow curve
+			#1 
+			kIdx = 8
+			fig = plt.figure()
+			ax = fig.add_subplot(111)
+			ax.plot(K, sumWithinSS, 'b*-')
+			ax.plot(K[kIdx], sumWithinSS[kIdx], marker='o', markersize=12, 
+			markeredgewidth=2, markeredgecolor='r', markerfacecolor='None')
+			plt.grid(True)
+			plt.xlabel('Number of clusters')
+			plt.ylabel('within-cluster sum of squares')
+			plt.title('Elbow for KMeans clustering')
+
+5. Use the Pyspark to build the model for the k value you have got from the analysis
+
+			#1. Import necessary packages
+			from pyspark.mllib.clustering import KMeans, KMeansModel
+			from numpy import array
+			from math import sqrt
+
+			#2. Write a function (convertDataFloat) to convert the two features longitude and latitude into float type
+			def convertDataFloat(line):
+				return array([float(line[1]),float(line[2])])
+
+			#3. Apply Map transformation on the uber_fea_data RDD and apply convertDataFloat function on each line and create parsedUberData RDD
+			uber_fea_data = uber_data.map(lambda data:data.split(','))
+			parsedUberData = uber_fea_data.map(lambda line : convertDataFloat(line)) 
+
+			#4. Verify first line from the above parsed RDD, parsedUberData
+			parsedUberData.first()
+
+			#5. Verify the total count in the above RDD, parsedUberData
+			parsedUberData.count()
+
+			#6. Train the model on cluster data with K = 8, 
+			clusters = KMeans.train(parsedUberData,8, maxIterations=10,runs=10, initializationMode="random")
+
+			#7. Verify cluster centers
+			clusters.centers
+
+			#8. Function to compute WSSSE 
+			def wsssError(point):
+				center = clusters.centers[clusters.predict(point)]
+				return sqrt(sum([x**2 for x in (point - center)]))
+
+			#9. Compute and display Total WSSSE
+			WSSSE = parsedUberData.map(lambda point: wsssError(point)).reduce(lambda x, y: x + y)
+			print("Within Set Sum of Squared Error = " + str(WSSSE))
+
+			#10. Save the above model
+			clusters.save(sc, "/user/<User_ID>/uber/kmeanModel")
+			
+			
+			
+6.	Use the Kafka and Streaming part of the code to do the remaining:
+		#open two terminals to run producer in one terminal and consumer in the other:
+		
+		#1. Create a Kafka Topic with the name insofeB56<user_ID>
+		#Idenify a Zookeeper connect ip
+		#Create a topic
+		export PATH=$PATH:/usr/hdp/current/kafka-broker/bin
+		kafka-topics.sh --create --zookeeper c.insofe.edu.in:2181 --topic  insofeB56<user_ID> --partitions=1 --replication-factor=1
+		 #Verify the topic is created or not and describe the topics
+		kafka-topics.sh --list --zookeeper c.insofe.edu.in:2181 
+		kafka-topics.sh --describe --topic insofeB56<user_ID> --zookeeper c.insofe.edu.in:2181
+
+		#2. A Spark Streaming Consumer consumes the data from the Kafka topic and do some processing using spark.
+		#From one terminal you need to run the spark programme to handle the streaming data to run that use the below command.
+		spark-submit --jars <path to jars folder>/spark-streaming-kafka-assembly_2.11-2.1.1.jar \
+                                 <path to scripts folder>/2_uber_stream.py \
+                                 c.insofe.edu.in:2181 \
+                                 insofeB42<user_ID>
+
+		   #2_uber_stream.py   - Programme name
+		   #insofeB42<user_ID> - topic name 
+
+
+		#3. A Kafka Producer will read data from the static source (file path) and writes data into Kafka topic
+		#From another terminal run the following command to push the data to kafka producer.
+		bash <path to Scripts Folder>/kafkaloader.sh <path to Streaming Folder>  a.insofe.edu.in:9092 insofeB42<user_ID>
+
+		#kafkaloader.sh - This script accepts 3 arguments 
+		#i. StreamingData/ - Input directory path
+		#ii. ip of the Kafka broker
+		#iii. insofeB42<user_ID>- topic name
+
+		#4. Verify streaming data available in HDFS
+		   hdfs dfs -ls /user/<user_ID>/StreamData/
+                 # You should see a list of files in the names /user/<user_ID>/StreamData/Data_* type
+		
+		
+		
+7.	Bring the files from HDFS using 
+		hdfs dfs -get /user/<user_ID>/StreamData/ /home/<user_ID>/Uber/
+	
+8.	Use the Vizualization File change the path and do the remaining commands in the jupyter notebook
+
+    
+
+
+
+		
+		
+			

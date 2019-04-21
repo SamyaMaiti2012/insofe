@@ -1,0 +1,4 @@
+bash ./Uber/scripts/kafkaloader.sh ./Streaming c.insofe.edu.in:9092 insofeB56
+
+
+spark-submit --jars ./Uber/jars/sparkstreamingkafkaassembly_2.112.1.1.jar ./Uber/scripts/2_uber_stream.py c.insofe.edu.in:2181 insofeB56

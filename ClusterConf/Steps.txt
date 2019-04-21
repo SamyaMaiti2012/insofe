@@ -1,0 +1,16 @@
+Insofe cluster details
+
+URL : http://172.16.0.247
+Username : 2618B56
+Password  : 91@*1866
+
+
+Local
+/home/2618B56
+
+
+HDFS user dir
+hdfs dfs -ls /user/2618B56/
+
+
+jupyter notebook --ip=172.16.0.232 --port=22618 --no-browser

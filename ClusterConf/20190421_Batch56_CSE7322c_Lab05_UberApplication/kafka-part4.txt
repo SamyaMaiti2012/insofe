@@ -1,0 +1,25 @@
+#Part 4: Bring Streaming data into HDFS
+
+#1. Create a Kafka Topic with the name insofe_batch31_appl2_topic
+Idenify a Zookeeper connect ip
+Create a topic
+Verify the topic is created or not
+
+#2. A Spark Streaming Consumer consumes the data from the Kafka topic and do some processing using spark.
+#From one terminal you need to run the spark programme to handle the streaming data to run that use the below command.
+spark-submit --jars ./uber/jars/spark-streaming-kafka-assembly_2.11-2.1.1.jar ./uber/Scripts/2_uber_stream.py e.insofe.edu.in:2181 insofe_topic 
+
+#2_uber_stream.py           - Programme name
+#insofe_batch31_appl2_topic - topic name 
+
+
+#3. A Kafka Producer will read data from the static source (file path) and writes data into Kafka topic
+#From another terminal run the following command to push the data to kafka producer.
+bash ./uber/Scripts/kafkaloader.sh /home/jayantm/datafiles/StreamingData a.insofe.edu.in:9092 insofe_topic
+
+#kafkaloader.sh - This script accepts 3 arguments 
+#i. StreamingData/ - Input directory path
+#ii. ip of the Kafka broker
+#iii. insofe_batch31_app<id>_topic - topic name
+
+#4. Verify streaming data available in HDFS
