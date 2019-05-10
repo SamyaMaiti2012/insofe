@@ -1,0 +1,151 @@
+Activity 1 : Import data from RDBMS (MySQL) to Hadoop Distributed File System
+
+Part 1 : Create the database and the corresponding table.
+
+	$mysql -h  <mysql_server_ip> -u insofeadmin -p
+	insofe_password
+	
+	> CREATE DATABASE IF NOT EXISTS insofe_<userID>;
+	
+	> USE insofe_<userID>;
+	
+	> CREATE TABLE employees (
+    emp_no INT NOT NULL,
+    birth_date DATE NOT NULL,
+    first_name VARCHAR(14) NOT NULL,
+    last_name VARCHAR(16) NOT NULL,
+    gender ENUM ('M','F') NOT NULL,
+    hire_date DATE NOT NULL,	
+    last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (emp_no)
+    );
+	
+	> DESCRIBE employees;
+	
+	> SOURCE load_employees.dump;
+	
+	> SELECT COUNT(*) FROM employees;
+	
+	> SELECT * FROM employees LIMIT 10; 
+	
+	> SELECT * FROM employees ORDER BY emp_no DESC LIMIT 10;
+	
+Part 2: Executing the Sqoop import command	
+	
+	$ sqoop import \
+	--connect jdbc:mysql://<mysql_server_ip>:3306/insofe_<userID> \
+	--table employees \
+	--username insofeadmin \
+	-P \
+	--target-dir '/user/<userID>/insofe_<userID>/employees'
+	
+	$ hdfs dfs -ls -R "/user/<userID>/insofe_<userID>/"
+	
+	$ hdfs dfs -cat /user/<userID>/insofe_<userID>/employees/part-m-00000 | head
+	$ hdfs dfs -cat /user/<userID>/insofe_<userID>/employees/part-m-00000 | tail
+	
+
+Activity 2: Creating a Sqoop Job for importing all the tables:
+	
+	$ hdfs dfs -rm -R "/user/<userID>/insofe_<userID>/"
+
+	$ sqoop job \
+	--create importalltables_<userID> \
+	-- import-all-tables \
+	--connect jdbc:mysql://<mysql_server_ip>:3306/insofe_<userID> \
+	--username insofeadmin \
+	-P \
+	--warehouse-dir '/user/<userID>/insofe_<userID>/'
+	
+	$ sqoop job --exec importalltables_<userID>
+	
+	$ hdfs dfs -ls -R "/user/<userID>/insofe_<userID>/"
+	
+Activity 3: Creating a Sqoop job Incremental Append
+
+	> SOURCE load_employees_added.dump;
+	
+	$ sqoop job \
+	--create inc_import_employee_<userID> \
+	-- import \
+	--connect jdbc:mysql://<mysql_server_ip>:3306/insofe_<userID> \
+	--username insofeadmin \
+	-P \
+	--table employees \
+	--incremental append \
+	--check-column emp_no \
+	--last-value 300024 \
+	--target-dir '/user/<userID>/insofe_<userID>/employees/'
+	
+	$ sqoop job --exec inc_import_employee_<userID>
+	$ hdfs dfs -ls -R 'insofe_<userID>/employees/'
+	$ hdfs dfs -cat 'insofe_<userID>/employees/part-m-0000*' | tail
+	$ hdfs dfs -cat 'insofe_<userID>/employees/*' | wc -l
+
+	
+Activity 4: Creating a Sqoop job for Increment using lastmodified
+
+	> INSERT INTO employees VALUES(310025, "1985-09-25", "Ram", "Kumar", "M", "2017-01-15", NULL);
+	> update employees set first_name='Thomas', last_name='John' where emp_no = 310021;
+
+	$ sqoop job \
+	--create inc_import_employee2_<userID> \
+	-- import \
+	--connect jdbc:mysql://<mysql_server_ip>:3306/insofe_<userID> \
+	--username insofeadmin \
+	-P \
+	--table employees \
+	--incremental lastmodified \
+	--check-column last_modified \
+	--last-value "2018-08-05 07:27:00" \
+	--target-dir '/user/<userID>/insofe_<userID>/employees/' \
+	--merge-key emp_no
+	
+	$ sqoop job --exec inc_import_employee2_<userID>	
+	$ hdfs dfs -ls -R 'insofe_<userID>/employees/'
+
+Activity 5: Export data from Hadoop Distributed File System to RDBMS (MySQL)
+
+	$mysql -h  <mysql_server_ip> -u insofeadmin -p
+		insofe_password
+	> USE insofe_<userID>;
+	> CREATE TABLE employeesCopy LIKE employees;
+	
+	$sqoop export \
+	--connect jdbc:mysql://<mysql_server_ip>:3306/insofe_<userID> \
+	--username insofeadmin \
+	-P \
+	--table employeesCopy \
+	--export-dir insofe_<userID>/employees \
+	--batch \
+	--update-key emp_no \
+	--update-mode allowinsert \
+	--input-fields-terminated-by ',' \
+	--input-lines-terminated-by '\n'
+	
+	> SELECT COUNT(*) FROM employeesCopy;
+
+
+Activity 6: Reading the password from a File
+	$ echo -n "insofe_password" > sqoop.password
+	$ hdfs dfs -copyFromLocal sqoop.password .
+	$ hdfs dfs -chmod 755 sqoop.password
+
+	$ sqoop import \
+	--connect jdbc:mysql://<mysql_server_ip>:3306/insofe_<userID> \
+	--table employees \
+	--username insofeadmin \
+	--password-file sqoop.password \
+	--target-dir '/user/<userID>/insofe_<userID>/employees'
+	
+
+	
+
+
+	
+
+
+
+
+	
+

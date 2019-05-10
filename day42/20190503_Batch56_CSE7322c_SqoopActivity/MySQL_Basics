@@ -1,0 +1,55 @@
+1. Connecting to a MySQL database:
+	mysql -h  <mysql_server_ip> -u insofeadmin -p
+	insofe_password
+
+2. List all the Databases:
+	SHOW DATABASES;
+
+3. Creating a database: 
+	CREATE DATABASE insofe_batch42_sqoop_db;
+
+4. Using a Database:
+	USE insofe_batch42_sqoop_db;
+
+5. List all the Tables:
+	SHOW TABLES;
+
+6. Creating a new Table:
+CREATE TABLE widgets(
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    widget_name VARCHAR(64) NOT NULL,
+    price DECIMAL(10,2),
+    design_date DATE,
+    version INT,
+    design_comment VARCHAR(100));
+
+7. Inserting into a Table:
+	INSERT INTO widgets VALUES( NULL, 'gizmo', 4.00, '2018-02-15', 4, "stable version");
+	INSERT INTO widgets VALUES(5, 'sprocket', 24.00, '2018-02-15', 4, "connects two gizoms");
+	INSERT INTO widgets VALUES(2, 'gadget', 45.00, '2018-02-16', 5, "flagship product");
+	
+8. Updating into a Table:
+UPDATE widgets 
+SET widget_name = 'gizmo1', price = 8.50 
+WHERE widget_name = 'gizmo';
+
+9. Creating a new table similar to another table :
+CREATE TABLE widgets2 LIKE widgets;
+
+10. To View any tables: 	
+	SELECT * FROM widgets;
+	SELECT widget_name, price, design_date from widgets;
+
+11. To get the count of the number of rows:
+	SELECT COUNT(*) from widgets;
+
+12. Sourcing of the dump file :	
+	//If the dump file doesn't have the code to create the table, we might have to manually create the corresponding tables before sourcing the dump file.	
+	SOURCE load_employees.dump;
+	
+13. Deleting a Table:
+	DROP TABLE employees;
+
+
+	
+

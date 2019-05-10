@@ -1,0 +1,65 @@
+Prerequisit:
+Load the following files into your HDFS :-
+	1. customers.txt
+	2. employees.txt
+	3. students.txt
+	4. orders.txt
+
+1. Entering the grunt shell
+$ pig -x local 
+(or)
+$ pig -x mapreduce
+grunt>
+
+2. LOAD Operator
+grunt> customers = LOAD 'pig/data/customers.txt' USING PigStorage(',') as (id:int,name:chararray,age:int,city:chararray,amount:double);
+
+3. DUMP Operator
+grunt> DUMP customers;
+
+4. DESCRIBE Operator
+grunt> DESCRIBE customers;
+
+5. GROUP Operator
+grunt> grouped_data = GROUP customers BY city;
+grunt> DUMP grouped_data;
+
+6. COGROUP Operator
+grunt> employees = LOAD 'pig/data/employees.txt' USING PigStorage(',') as (id:int,name:chararray,age:int,city:chararray);
+grunt> DUMP employees;
+grunt> students = LOAD 'pig/data/students.txt' USING PigStorage(',') as (id:int,firstname:chararray,lastname:chararray,age:int,mobile:chararray,city:chararray);
+grunt> DUMP students;
+grunt> cogroup_data = COGROUP students BY age, employees BY age;
+grunt> DUMP cogroup_data;
+
+7. COGROUP with INNER Operator
+grunt> cogroup_inner_data = COGROUP students BY age INNER, employees BY age INNER;
+grunt> DUMP cogroup_inner_data;
+
+8. JOIN Operator
+grunt> orders = LOAD 'pig/data/orders.txt' USING PigStorage(',') as (id:int,order_time:Datetime,customerid:int,amount:double);
+grunt> customers_orders = JOIN customers BY id, orders BY customerid;
+
+9. UNION Operator
+grunt> students1 = LOAD 'pig/Activity/students1.txt' USING PigStorage(',') as (id:int,name:chararray,age:int,city:chararray);
+grunt> students2 = LOAD 'pig/Activity/students2.txt' USING PigStorage(',') as (id:int,name:chararray,age:int,city:chararray);
+grunt> students = UNION students1,students2;
+
+10. SPLIT Operator
+grunt> SPLIT students INTO students_juniors IF age < 23, students_seniors IF (age > 23 AND age < 24), students_super_seniors IF (age > 24); 
+grunt> DUMP students_juniors;
+grunt> DUMP students_seniors;
+grunt> DUMP students_super_seniors;
+
+11. FILTER Operator
+grunt> students_filtered = FILTER students BY age > 20;
+
+12. DISTINCT Operator
+grunt> students_distinct = DISTINCT students;
+
+13. FOREACH Operator
+grunt> data = FOREACH students1 GENERATE id,name;
+grunt> DUMP data;
+
+14. STORE Operator 
+grunt> STORE students INTO '/user/thomasj/students' USING PigStorage(',');

@@ -1,0 +1,125 @@
+
+Hive Activity Sheet
+Commands:
+---------
+
+INTERNAL/MANAGED TABLE: 
+------------------------
+
+To enter the hive prompt/CLI
+$ hive
+
+To list all the existing databases:
+> show databases;
+
+To create a new database:
+> CREATE DATABASE IF NOT EXISTS thomasjdb;
+
+> DROP DATABASE thomasjdb cascade;
+
+To change/use to the current database:
+> use thomasjdb;
+
+To create a new table in the above database:
+> CREATE TABLE thomasj_posts(users STRING, post STRING, time BIGINT) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE;
+
+To view/list all the tables in the current database:
+> show tables;
+
+To view the schema/structure of the table:
+> describe thomasj_posts;
+
+In Hive, we can insert data using the LOAD DATA statement. To load data (file) from local file system to Hive:
+
+> LOAD DATA LOCAL INPATH 'user-posts.txt' OVERWRITE INTO TABLE thomasj_posts;
+
+To view the contents of the above table:
+> select count (1) from thomasj_posts;
+> select * from thomasj_posts where users="user2";
+> select * from thomasj_posts where time<=1343182133839 limit 2;
+> select * from thomasj_posts order by time;
+> select users, post from thomasj_posts order by users;
+
+# create a table with same schema as posts
+CREATE TABLE thomasj_posts_copy like thomasjdb.thomasj_posts;
+
+To rename a table, alter command is used
+> ALTER TABLE thomasj_posts RENAME TO thomasj_posts_altered;
+
+To drop (remove the data and schema) the table:
+> DROP TABLE IF EXISTS thomasj_posts;
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+
+Joins:
+Default Join is Inner Join.
+Rows are joined where the keys match.
+Rows that do not have matches are not included in the result.
+
+
+> CREATE TABLE thomasj_posts (users STRING, post STRING, time BIGINT) ROW
+FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE;
+
+> LOAD DATA LOCAL INPATH '/home/thomasj/Batch56/Sqoop_Pig_Hive_Activity/Hive/user-posts.txt' OVERWRITE INTO TABLE thomasj_posts;
+
+> CREATE TABLE thomasj_likes (users STRING, post STRING, time BIGINT) ROW
+FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE;
+
+> DESCRIBE thomasj_likes;
+
+> LOAD DATA LOCAL INPATH '/home/thomasj/Batch56/Sqoop_Pig_Hive_Activity/Hive/user-likes.txt' OVERWRITE INTO TABLE thomasj_likes;
+
+Inner Join
+
+> SELECT p.*, l.* FROM thomasj_posts p JOIN thomasj_likes l ON (p.users = l.users);
+
+
+Left Outer Join - Rows from the first table are included whether they have a match or not. Columns from the unmatched (second) table are set to null.
+
+> SELECT p.*, l.* FROM thomasj_posts p LEFT OUTER JOIN thomasj_likes l ON (p.users =
+l.users);
+
+
+Right Outer Join - The opposite of Left Outer Join: Rows from the second table are included no matter what. Columns from the unmatched (first) table are set to null.
+
+> SELECT p.*, l.* FROM thomasj_posts p RIGHT OUTER JOIN thomasj_likes l ON (p.users = l.users) limit 5;
+
+Outer Join - Rows, which will not join with the other table, are still included in the result
+Full Outer Join - Rows from both sides are included. For unmatched rows the columns from the other table are set to null.
+
+> SELECT p.*, l.* FROM thomasj_posts p FULL OUTER JOIN thomasj_likes l ON (p.users = l.users) limit 5;
+
+----------------------------------------------------------------------------------------------------------------------------
+
+EXTERNAL TABLE:
+---------------
+
+To Load data from HDFS:
+
+> CREATE EXTERNAL TABLE thomasj_posts (users STRING, post STRING, time BIGINT)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE;
+
+> LOAD DATA INPATH '/user/thomasj/user-posts.txt' OVERWRITE INTO TABLE thomasj_posts;
+
+> CREATE EXTERNAL TABLE thomasj_posts_new (users STRING, post STRING, time
+BIGINT) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE LOCATION '/user/thomasj/folder';
+
+> LOAD DATA INPATH '/user/thomasj/user-posts.txt' OVERWRITE INTO TABLE thomasj_posts_new;
+
+
+To check if the table is Internal or External
+
+> desc formatted <db-name>.<db-table-name>;
+
+------------------------------------------------------------------------------------------------------------------------------
+
+PARTITIONED EXTERNAL TABLES:
+----------------------------
+> CREATE EXTERNAL TABLE thomasj_posts2 (users STRING, post STRING)
+PARTITIONED BY (time BIGINT)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE;
+
+> LOAD DATA INPATH '/user/thomasj/user-posts.txt' OVERWRITE INTO TABLE thomasj_posts PARTITION (time);
+
+> INSERT OVERWRITE TABLE thomasj_posts2 PARTITION (time) SELECT * FROM thomasj_posts;

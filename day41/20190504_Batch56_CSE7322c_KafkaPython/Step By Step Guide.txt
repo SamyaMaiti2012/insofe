@@ -1,0 +1,80 @@
+IP address where kafka broker is installed - c.insofe.edu.in (ip address will not work 172.16.0.218 )
+Kafka broker present on port - 9092
+
+###########################################################################
+1. Steps to check whether the messages are shown correctly
+   near producer and consumer in Kafka.
+###########################################################################
+
+############################################################
+How to create a topic:
+############################################################
+
+###########
+Terminal-1:
+###########
+
+# Export the kafka path
+export PATH=$PATH:/usr/hdp/current/kafka-broker/bin
+
+## Create a topic named <Topic Name> (e.g. insofe_topic_testgau) with a single partition and only one replica:
+kafka-topics.sh --create --zookeeper c.insofe.edu.in:2181 --replication-factor 1 --partitions 1 --topic my-topic
+
+# Displays all the topics that are running
+kafka-topics.sh --list --zookeeper c.insofe.edu.in:2181
+
+#  Delete a topic from kafka
+# kafka-topics.sh --delete --zookeeper c.insofe.edu.in:2181 --topic test-topic
+
+############################################################
+## Send some messages from producer
+############################################################
+# ip = c.insofe.edu.in or 0.0.0.0 (not running correctly when we use localhost)
+# Kafka comes with a command line client that will take input from a file or from standard input and send it out as messages to the Kafka cluster. By default, each line will be sent as a separate message.
+
+# Run the producer and then type a few messages into the console to send to the server.
+
+kafka-console-producer.sh --broker-list c.insofe.edu.in:9092 --topic my-topic
+
+###########
+Terminal-2:
+###########
+
+# Export the kafka path
+export PATH=$PATH:/usr/hdp/current/kafka-broker/bin
+
+# Command to run the consumer - consuming the messages form specific topic using zookeer
+kafka-console-consumer.sh --bootstrap-server c.insofe.edu.in:9092 --topic my-topic --from-beginning
+
+
+###########################################################################
+2. Kafka Python Steps
+###########################################################################
+
+1. Install kafka-python package - to run Kafka Producer and Consumer code
+
+pip install kafka-python - Will work when you install as root user(sudo su(root user login))
+
+Terminal 1:
+
+2. Batch56_KafkaProducer.py - Kafka producer code to push the messages. Command to run kafka producer
+   
+   python Batch56_KafkaProducer.py
+
+Terminal 2:
+
+# To consume latest messages and auto-commit offsets
+# api_version (tuple) -- Specify which Kafka API version to use. If set to None, 
+# the client will attempt to infer the broker version by probing various APIs. Different versions enable different functionality.
+# Examples:
+# (0, 9) enables full group coordination features with automatic partition assignment and rebalancing,
+# (0, 8, 2) enables kafka-storage offset commits with manual partition assignment only,
+# (0, 8, 1) enables zookeeper-storage offset commits with manual partition assignment only,
+# (0, 8, 0) enables basic functionality but requires manual partition assignment and offset management. 
+   
+# Make sure to add the api_version (0, 8, 1) to retireve the messages
+
+3. Batch56_KafkaConsumer.py - Kafka consumer code to read the stream messages and write it to disk or console.
+   
+   Command:
+   python Batch56_KafkaConsumer.py

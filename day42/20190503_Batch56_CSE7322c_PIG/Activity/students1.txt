@@ -1,0 +1,6 @@
+1,Rajiv,25,Hyderabad 
+2,siddarth,22,Kolkata 
+3,Rajesh,22,Delhi 
+4,Preethi,26,Pune 
+5,Komal,26,Trivandrum
+6,Trupthi,23,Bhuwaneshwar
