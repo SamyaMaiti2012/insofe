@@ -1,0 +1,32 @@
+BI on Hadoop Activity :
+=======================
+$ echo -n "insofe_password" > sqoop.password
+$ hdfs dfs -copyFromLocal sqoop.password .
+$ hdfs dfs -chmod 755 sqoop.password
+
+Step 1: Import the data into HDFS using Sqoop import.
+sh /home/2618B56/Cute_Big_data/sqoopimportjobdefinitions.sh Cute_Big_data_import_2618B56 172.16.0.227 insofe_web_sales_db /user/2618B56/Cute_Big_data
+
+Step 2: To check the number of records loaded into HDFS.
+sh /home/2618B56/Cute_Big_data/hdfsRowCount.sh
+
+Step 3:  Hive table creations
+hive -f /home/2618B56/Cute_Big_data/hivetabledefs.hql
+
+
+
+
+Steps 7: Verify the results tables in Hdfs
+hdfs dfs -ls /user/2618B56/results/active_employees_data/
+
+Step 8: Hive aggregation for results tables
+hive -f /home/2618B56/Cute_Big_data/hiveaggregatedtables.hql
+
+Step 9: Mysql results table creation.
+mysql -h  172.16.0.218 -u insofeadmin -p insofe_password
+mysql -h  172.16.0.224 -u insofeadmin -p < /home/2618B56/Cute_Big_data/resultsinsql.sql
+
+Step 10: Tables exported to mysql
+sh /home/2618B56/Cute_Big_data/sqoopexports.sh 172.16.0.224
+
+Step 11: Visualize the data

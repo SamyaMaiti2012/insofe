@@ -1,0 +1,12 @@
+echo "No. of rows in departments table"
+hdfs dfs -cat /user/2618B56/employeesDB/departments/* | wc -l
+echo "No. of rows in dept_emp table"
+hdfs dfs -cat /user/2618B56/employeesDB/dept_emp/* | wc -l
+echo "No. of rows in dept_manager table"
+hdfs dfs -cat /user/2618B56/employeesDB/dept_manager/* | wc -l
+echo "No. of rows in employees table"
+hdfs dfs -cat /user/2618B56/employeesDB/employees/* | wc -l
+echo "No. of rows in salaries table"
+hdfs dfs -cat /user/2618B56/employeesDB/salaries/* | wc -l
+echo "No. of rows in titles table"
+hdfs dfs -cat /user/2618B56/employeesDB/titles/* | wc -l

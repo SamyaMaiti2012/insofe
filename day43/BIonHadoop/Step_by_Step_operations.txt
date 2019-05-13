@@ -1,0 +1,52 @@
+
+Prerequisite for the activity:
+==============================
+	Step 1: Opening mysql and defining the tables.
+	mysql -h 172.16.0.218 -u insofeadmin -p < /home/2618B56/BIonHadoop/table_definitions.sql
+
+	Step 2: Load data into the database.
+	mysql -h 172.16.0.218 -u insofeadmin -p < /home/2618B56/BIonHadoop/bulkload.sql
+
+BI on Hadoop Activity :
+=======================
+$ echo -n "insofe_password" > sqoop.password
+$ hdfs dfs -copyFromLocal sqoop.password .
+$ hdfs dfs -chmod 755 sqoop.password
+
+Step 1: Import the data into HDFS using Sqoop import.
+sh /home/2618B56/BIonHadoop/sqoopimportjobdefinitions.sh initialimport_2618B56 172.16.0.218 insofe_batch56_empdb /user/2618B56/employeesDB
+
+Step 2: To check the number of records loaded into HDFS.
+sh /home/2618B56/BIonHadoop/hdfsRowCount.sh
+
+Prerequisite for the remaining steps :
+=====================================
+Import tables in mysql with the delta loads.
+mysql -h 172.16.0.218 -u insofeadmin -p < /home/2618B56/BIonHadoop/incremental_loading.sql
+
+Step 3: Delta load moving to HDFS via sqoop incremetal import
+sh /home/2618B56/BIonHadoop/sqoopincimports.sh  172.16.0.218 insofe_batch56_empdb
+
+Step 4:  Verify the delta records are brought to hdfs
+sh /home/2618B56/BIonHadoop/hdfsRowCount.sh
+
+Step 5:  Hive table creations
+hive -f /home/2618B56/BIonHadoop/hivetabledefs.hql
+
+Step 6: Aggregated tables create using Pig
+pig -x mapreduce -useHCatalog /home/2618B56/BIonHadoop/TransformationsScript.pig
+
+Steps 7: Verify the results tables in Hdfs
+hdfs dfs -ls /user/2618B56/results/active_employees_data/
+
+Step 8: Hive aggregation for results tables
+hive -f /home/2618B56/BIonHadoop/hiveaggregatedtables.hql
+
+Step 9: Mysql results table creation.
+mysql -h  172.16.0.218 -u insofeadmin -p insofe_password
+mysql -h  172.16.0.224 -u insofeadmin -p < /home/2618B56/BIonHadoop/resultsinsql.sql
+
+Step 10: Tables exported to mysql
+sh /home/2618B56/BIonHadoop/sqoopexports.sh 172.16.0.224
+
+Step 11: Visualize the data
