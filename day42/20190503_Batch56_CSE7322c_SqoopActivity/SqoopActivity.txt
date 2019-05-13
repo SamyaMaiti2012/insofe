@@ -139,13 +139,3 @@ Activity 6: Reading the password from a File
 	--target-dir '/user/<userID>/insofe_<userID>/employees'
 	
 
-	
-
-
-	
-
-
-
-
-	
-
