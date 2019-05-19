@@ -1,0 +1,40 @@
+###########
+Terminal-1:
+###########
+cd /home/2618B56/BigData_PHD
+
+# Export the kafka path
+export PATH=$PATH:/usr/hdp/current/kafka-broker/bin
+
+## Create a topic named <Topic Name> (e.g. insofe_topic_testgau) with a single partition and only one replica:
+kafka-topics.sh --create --zookeeper c.insofe.edu.in:2181 --replication-factor 1 --partitions 1 --topic big_data_phd_2618B56
+
+# Displays all the topics that are running
+kafka-topics.sh --list --zookeeper c.insofe.edu.in:2181
+
+###################################
+## Send some messages from producer
+###################################
+python KafkaProducerReadFileAndProduceEachFileAsAKafkaMsg.py
+
+
+
+###########
+Terminal-2:
+###########
+cd /home/2618B56/BigData_PHD
+
+export PATH=$PATH:/usr/hdp/current/kafka-broker/bin
+# Command to run the consumer - consuming the messages form specific topic using zookeer
+kafka-console-consumer.sh --zookeeper c.insofe.edu.in:2181 --topic big_data_phd_2618B56
+
+
+
+
+
+###########
+Terminal-3:
+###########
+cd /home/2618B56/BigData_PHD
+
+spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0 Spark_structured_streaming_v1.py

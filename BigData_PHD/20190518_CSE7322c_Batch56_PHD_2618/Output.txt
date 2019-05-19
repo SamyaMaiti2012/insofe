@@ -1,0 +1,164 @@
+{
+  "News": "Is anyone out there knowledgeable on drug issues in Japan?  I'm interested\nin knowing if Japan has or has ever had a problem with drugs, and how they\ndealt with it.  I've hear d, undocumented, that Japan years ago used heavy\nlegal penalties to end a serious heroin problem.  I'd like to know both\nsides of the story.  Does anyone recall such a problem?  What w ere laws\nat the time relating to drug use, drug dealing, and drug trafficking?  What\nare the laws now?  What other anti-drug measures, like education and treatment\nhas Japan used?  Ho w are drugs regarded by the Japanese people?  How effective\nhave anti-drug measures been in Japan?  Thanks for your help.\n",
+  "rawprediction": {
+    "type": 1,
+    "values": [
+      -2923.4286115139853,
+      -2524.8734735698195,
+      -2811.2831078395216,
+      -2513.4738247645278,
+      -2979.350128197156,
+      -2725.0094642946183,
+      -2780.2891027191567
+    ]
+  },
+  "prediction": 3.0,
+  "prediction_actual_name": "talk"
+}
+
+
+{
+  "News": "\nWell, they never should have gotten into this situation.\n\nLook at the history of this group. David Koresh has been arrested\n?twice?  by local police. Both times, he accepte d the arrest warrant\nand went peacefully. So, the feds decide to arrest him. How do they\nchoose to arrest a person with a record of peaceful obedience under\narrest? They throw a concu ssion grenades at his building. \n\nIn addition, we KNOW that we've been lied to. Initially, we were told\nthat they suspected him of molesting children and having several\nwives. But th ese are NOT ATF offenses, were they? So they changed\ntheir story, several times. And the original warrant is STILL sealed.\nAnd we were told about the rockets and ammunition they had...  but did\nanyone notice any ammo exploding in the fire? They claimed that Koresh\nhadn't left the compound in months... but people in town report seeing\nhim just a week before the raid. \n\nHow would I have handled it differently? \n\nWell, first, I haven't seen any evidence that the BDs did anything\nwrong. There's a sealed warrant, and a collection of stories which\nk eep changing about what they did. So I might not have done ANYTHING.\n\nOK. Now, supposing that I know what the BDs are being arrested for.\nWell, they've got a history of accepting arre sts... so, I send\nofficers to the door with a warrant. Wearing bulletproof vests.\nCovered from a distance by sharpshooters. Now, there's no good reason\nto suspect that these people wi ll do anything, right? Why didn't\nanyone TRY serving a warrant?\n\nOK. Going further. They refuse the warrant. It becomes necessary to\nraid. You plan a raid. You hear an hour before th at there was a leak,\nand they know your coming. SO what do you do?  Well, change your\nplans, right? Nope... they go ahead with it anyone... including\nsending in unprotected men to bre ak into the place. It was idiotic. I\ndon't know what I would have ended up doing. But that original raid\nshould NEVER have happened.\n\nThe shit that came later should NEVER have happe ned.\n\nThe full record of the raid should be released to the public to let us\nknow what the hell really happened there.\n\nThe lies should NEVER have been told.\n\n\t<MC>",
+  "rawpredicti on": {
+    "type": 1,
+    "values": [
+      -9977.172478387263,
+      -9281.372775112704,
+      -9336.944665029436,
+      -8515.251857179943,
+      -9939.387338175431,
+      -9239.084101325332,
+      -9281.876643089652
+    ]
+  },
+  "prediction": 3.0,
+  "predictio n_actual_name": "talk"
+}
+
+
+{
+  "News": "Does any one know of a decent quality library of routines for\nperforming 3D graphics modelling on the PC?\n\nIdeally the routines would be embeded in our application program.\n \nRequirements (wish list):\n- flat surface modelling (simple phong shading optional)\n- ability to plot hidden-line drawings\n- Texture mapping -- both procedural and bit map\n- modelin g light sources (local, distant, and spot lights)\n- Ray-tracing\n- Radiosity (optional)\n\nAny comments would be appreciated.\n\nJohn Chinnick -- jchinnic@mach1.wlu.ca\nphone : (519) 88 8-9666\n",
+  "rawprediction": {
+    "type": 1,
+    "values": [
+      -2691.210546601485,
+      -2956.1733435953524,
+      -3170.297547937258,
+      -3224.6856142023917,
+      -3115.0561535568554,
+      -3126.447012295303,
+      -3101.8058307895412
+    ]
+  },
+  " prediction": 0.0,
+  "prediction_actual_name": "comp"
+}
+
+
+{
+  "News": "\n\nI would expect that CD-ROM software would not even need copy protection.\nAs the program on a CD-ROM would not fit onto a hard-drive, and it is\nimpossible for the average ( and even not-so-average) user to write to a\nCD-ROM, copies of the software (that still work) could never be made.\n\nHmmm.. now that I think about it.. with a creative TSR, maybe\ndisk- swapping could be used to simulate files on a single disk. You\nwould need a tonne of disks though.\n",
+  "rawprediction": {
+    "type": 1,
+    "values": [
+      -1667.7220214948863,
+      -1657.0256840310044,
+      -1819.1058309856248,
+      -1837.7805299658896,
+      -1750.6078509367358,
+      -1850.9109485590398,
+      -1800.9828085065453
+    ]
+  },
+  "prediction": 1.0,
+  "prediction_actual_name": "sci"
+}
+
+
+{
+  "News": "Someone asked me if I there existed an init that removes the dialog\n   \"you're gonna disconnect all apletalk users \" or something\nlike that, when the powerbook falls asleep. \n\nHe said he was sure that such a thing existed, and he thought it was\nfreeware. Can anyone help me out with this ?",
+  "rawprediction": {
+    "type": 1,
+    "values": [
+      -1338.8040014101282,
+      -1333.6157aNissen\nwrapanda\"Hill Repair\".  He opted for the \"Hill Repair\". He recovered \nvery well from the surgery itself but the pain he had originally is worse \nand in addition he no 208378236,-1404.1948563470291,-1374.1269093380527,-1438.5209875027529,-1336.5355151740896,-1356.7841831562614]},"prediction":1.0,"prediction_actual_name":"sci"} 
+
+
+{"News":"\n\nOkay,
+      here's what to do.   Get a drill and a sanding disk. Use, say a \n100 disk and go at it at a very low rpm.  If you don'thaveadrill,
+      try\ncoarsesteelwoolandbrakefluid.Dot4hasanuncannyknackforremoving\n_any_paintimperfections.\n\nOh,
+      I'm not responsible for misuse or miapplication of either of these\ntechniques.","rawprediction":{"type":1,"values":[-1921.3729390463077,-1880.935030390979,-1841.2104113867058,-1951.4528001379513,-1827.8450658295033,-2006.4689699077314,-1967.7854189832274]},"prediction":4.0,"prediction_actual_name":"misc"} 
+
+
+{"News":"I am writing this to find out the following:\n\n1.)\tAny information on surgery to prevent reflux esophagitis.\n\n2.)\tThe name(s) of a doctor(s) who specialize in such surgery.\n\n3.)\tInformation on reflux esophagitis which leads to cancer.\n\nMy boyfriend, age 34 and otherwise in good health, was diagnosed with \nreflux esophagitis and a hiatal hernia about 2 years ago.  At that time he \nsaw a gastroenterologist and has tried acid controllers (Mylanta, \nTagamet), as well as a restricted diet and raising the head of his bed.  \nThese treatments were not effective and because the damage was \nworsening, he opted for a surgical repair 3 months ago.  He was told \nthere were two repair techniques that could fix the problem; a Nissen \nwrap and a \"Hill Repair\".  He opted for the \"Hill Repair\". He recovered \nvery well from the surgery itself but the pain he had originally is worse \nand in addition he now has trouble swallowing (including saliva).\n\nThe doctor now wants to do an endoscopy and has also informed him \nthat a biopsy might be necessary if he has a pre-cancerous condition \nwhich he called \"Barrett'sSyndrome\". If he can't avoid having reflux will \nhe necessarily get cancer?\n\nBasically, if anyone has any information on what he should do now, I'd \nappreciate it.\n\nThanks,",
+      "rawprediction": {
+        "type": 1,
+        "values": [
+          -4430.588641414538,
+          -3900.494045718541,
+          -4255.826071129938,
+          -4269.473053738195,
+          -4426.2337651792395,
+          -4338.446204715986,
+          -4386.48042773453
+        ]
+      },
+      "prediction": 1.0,
+      "prediction_actual_name": "sci"
+    }
+
+
+{
+      "News": "\n\n  I am not a paranoid, nor a government toady, nor even am I the guy you were\ntalking to originally, but I think you are simply NOT PAYING ATTENTION.\n\n  A bunch of people living off by themselves with a lot of guns nearby is not\nthat wierd in Texas.  My own family, very quiet taxpayers with extremely con-\nventional views, has something like 10 rifles and shotguns in a two-person\nhome.  Some of them were mine, but I don't live there anymore.  I now have\nmy own shotgun in my apartment.\n\n  Texas Child Protective Services (which loves to find child abuse) found no,\nI repeat NO, evidence of abuse when they first looked at the BD, and is saying\nthat they see none in any of the kids who were released.  There is no evidence\nthat Koresh was banging anyone but his wives.\n\n  It is not against the law to stockpile (most) weapons or campbell's soup.  \nNor is there any hard evidence in the form of actual hardware (as I write this)\nto prove the BD really had any *proscribed* weapons.\n\n  I feel they were all loonies, but there is no indication that they ever \nbothered anyone.  They were gone after in the wrong ways for the wrong reasons,\nand the BATF and FBI who are so busy trumpeting this child abuse angle hasn't\ngot a leg to stand on or any right to be involved in such abuse cases anyway. \nIf there was any real danger of the BD's going out on a rampage, then that\nis up to the officers of the state of Texas, who are probably getting a per-\nverse bit of pleasure at getting to torque the Feds for fucking up something\nin their state.\n\nsemper fi,",
+      "rawprediction": {
+        "type": 1,
+        "values": [
+          -6898.745782626038,
+          -6358.973383695973,
+          -6520.372089574225,
+          -5885.65931846283,
+          -6908.707653138339,
+          -6308.10809655908,
+          -6369.089071723233
+        ]
+      },
+      "prediction": 3.0,
+      "prediction_actual_name": "talk"
+    }
+
+
+{
+      "News": "\nUm, Kent... just what *have* you been doing with his wife?!?  ;-D\n",
+      "rawprediction": {
+        "type": 1,
+        "values": [
+          -160.4143702301841,
+          -164.50275414820493,
+          -150.27753159063212,
+          -156.05787181840833,
+          -175.1836353171398,
+          -164.42555842791816,
+          -161.72553480158268
+        ]
+      },
+      "prediction": 2.0,
+      "prediction_actual_name": "rec"
+    }
+
+
+{
+      "News": "A friend recorded CNN news during the gassing and incineration of\nthe BD's.  I went through it carefully today, and found something\nvery interesting.  A tank is pulling out of the house, and there\nis a fireball, maybe 24\" across that lasts for about 1 second.\nExactly ten minutes and thirty nine seconds later, the smoke starts\nbillowing out of that area of the building.\nNow, I'm no govt. spokestwinkie, so it might really have been a\nweather balloon or something.  Perhaps someone would check it out\nand comment.\n\n",
+      "rawprediction": {
+        "type": 1,
+        "values": [
+          -2545.5053100543764,
+          -2310.285305414994,
+          -2345.030648579592,
+          -2243.4541878872333,
+          -2557.8205685343764,
+          -2412.5857657851866,
+          -2480.9576596351912
+        ]
+      },
+      "prediction": 3.0,
+      "prediction_a ctual_name": "talk"
+    }

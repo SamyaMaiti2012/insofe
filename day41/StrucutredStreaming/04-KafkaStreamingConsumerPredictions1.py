@@ -25,7 +25,7 @@ spark.sparkContext.setLogLevel("ERROR")
 model = PipelineModel.load("file:///home/mahidharv/StructureStreamingKafka/Model")
 
 print(model)
-	
+
 df = spark \
   .readStream \
   .format("kafka") \
